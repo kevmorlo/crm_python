@@ -14,7 +14,7 @@ def register():
 def login():
     return render_template('login.html')
 
-@app.route('/traitement_register', methods=["POST"])
+@app.route('/traitement_register', methods=["POST", "GET"])
 def traitement_register():
     if request.method == "POST":
         donnees = request.form
@@ -23,7 +23,7 @@ def traitement_register():
     else:
         return redirect(url_for('index'))
     
-@app.route('/traitement_login', methods=["POST"])
+@app.route('/traitement_login', methods=["POST", "GET"])
 def traitement_login():
     if request.method == "POST":
         donnees = request.form
