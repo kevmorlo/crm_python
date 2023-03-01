@@ -7,8 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    <p>Ceci est un test !</p>
-    <a href="{{ url_for('login') }}">Se connecter</a>
-    <a href="{{ url_for('register') }}">S'inscrire</a>
+    <h1>Page de connexion</h1>
+    <form method="POST" action="{{ url_for('traitement_login') }}">
+        <input type="email" name="email" placeholder="Adresse email">
+        <input type="password" name="password" placeholder="Mot de passe">
+    </form>
 </body>
 </html>
