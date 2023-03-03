@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="votre-image.jpg" alt="Logo">
+        </div>
+        <div class="menu">
+        {% if session['user_is_connected'] %}
+            <a href="#">Se déconnecter</a>
+        {% else %}
+            <a href="#">Param</a>
+            <a href="#">Se connecter</a>
+        {% endif %}
+        </div>
+    </nav>
+    {% block base %}
+
+    {% endblock %}
+</body>
+</html>

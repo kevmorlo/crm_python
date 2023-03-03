@@ -1,9 +1,44 @@
 body{
     width: 100vw;
     height: 100vw;
+    margin: 0;
 }
 
-.flexbox{
+.navbar {
     display: flex;
-    justify-content: center;  
-}
+    align-items: center;
+    justify-content: space-between;
+    background-color: #cfa;
+    padding: 10px;
+  }
+  
+  .logo img {
+    height: 50px;
+  }
+  
+  .menu button {
+    background-color: #ccc;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    padding: 8px 12px;
+    margin-left: 10px;
+  }
+  
+  /* Responsive styles */
+  
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .menu {
+      margin-top: 10px;
+    }
+    
+    .menu button {
+      margin-left: 0;
+      margin-right: 10px;
+    }
+  }
