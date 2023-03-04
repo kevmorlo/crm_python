@@ -1,11 +1,11 @@
 body{
+    display: flex;
     width: 100vw;
     height: 100vw;
     margin: 0;
 }
 
 .navbar {
-    display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #cfa;
@@ -42,3 +42,21 @@ body{
       margin-right: 10px;
     }
   }
+.easter-egg-redirect {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+.logo-ic{
+  width: 10%;
+}
+
+@media (max-width: 768px) {
+  .easter-egg-redirect {
+    width: 30px;
+    height: 30px;
+    bottom: 5px;
+    right: 5px;
+  }
+}
