@@ -15,6 +15,39 @@ mysql.init_app(app)
 
 app.secret_key ="a773df62bbef3b540055f1689cde7d04577da32ed8b7b68df8bd5278b3972a3c"
 
+class UserLogin():
+    def __init__(self, email, password):
+        self.__email = email
+        self.__password = password
+    
+    def try_login(self):
+        conn = mysql.connect()
+        query = "SELECT email, mot_de_passe, sel FROM utilisateur WHERE email=%(email)s"
+        values = {'email': self.__email}
+        cursor = conn.cursor()
+        cursor.execute(query, values)
+        user = cursor.fetchone()
+        if user:
+            if self.check_password(user[2], user[1]):
+                query = "SELECT siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal  FROM utilisateur WHERE email=%(email)s"
+                values = {'email': self.__email}
+                cursor = conn.cursor()
+                cursor.execute(query, values)
+                user_infos = cursor.fetchone()
+                user_infos = UserInformations(*user_infos)
+                session['user_is_connected'] = True
+                session['user_infos'] = user_infos.to_dict()
+                print('User logged')
+        else:
+            print("Le compte n'a pas été trouvé")
+        conn.close()
+    
+    def check_password(self, salt, hashed_password):
+        if argon2.PasswordHasher().verify(hashed_password, self.__password+salt):
+            return True
+        else:
+            return False
+
 class UserRegister():
     def __init__(self, email,password, confirm_password, siren, company_name, phone, iban, adress, city, postal_code):
         self.__siren = siren
@@ -35,8 +68,8 @@ class UserRegister():
                 print(self.__password)
                 print(salt)
                 conn = mysql.connect()
-                query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, password, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(password)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
-                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'password': self.__password,
+                query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
+                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'mot_de_passe': self.__password,
                     'iban': self.__iban, 'adresse': self.__adress, 'ville': self.__city, 'code_postal': self.__postal_code, 'sel':salt}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
@@ -45,7 +78,8 @@ class UserRegister():
                 
     def hash_password(self):
         salt = secrets.token_hex(16)
-        hashed_password = argon2.PasswordHasher().hash(self.__password.encode() + salt.encode())
+        password = (self.__password+salt).encode('utf-8')
+        hashed_password = argon2.PasswordHasher().hash(password)
         return (hashed_password, salt)
         
     def check_password(self):
@@ -86,6 +120,19 @@ class UserInformations():
         self.__adress = adress
         self.__city = city
         self.__postal_code = postal_code
+        
+    def to_dict(self):
+        return {
+            "siren": self.__siren,
+            "company_name": self.__company_name,
+            "phone": self.__phone,
+            "email": self.__email,
+            "password": self.__password,
+            "iban": self.__iban,
+            "adress": self.__adress,
+            "city": self.__city,
+            "postal_code": self.__postal_code
+        }
         
     @property
     def siren(self):
@@ -162,7 +209,6 @@ class UserInformations():
 
 @app.route('/')
 def index():
-    session['user_is_connected'] = False
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute("Select * FROM facture")
@@ -177,6 +223,14 @@ def page_not_found(error):
 def register():
     return render_template('register.html')
 
+@app.route('/disconnect')
+def disconnect():
+    if session['user_is_connected']:
+        session.pop('user_is_connected')
+        session.clear()
+    return redirect(url_for('index'))
+    
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -187,16 +241,15 @@ def traitement_register():
         user_form = request.form.to_dict()
         user = UserRegister(**user_form)
         user.try_register()
-        return redirect(url_for('index'))
-    else:
-        return redirect(url_for('index'))
+    return redirect(url_for('index'))
     
 @app.route('/traitement_login', methods=["POST", "GET"])
 def traitement_login():
     if request.method == "POST":
-        donnees = request.form
-    else:
-        return redirect(url_for('index'))
+        user_form = request.form.to_dict()
+        user = UserLogin(**user_form)
+        user.try_login()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

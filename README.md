@@ -17,7 +17,7 @@ Ce projet est un projet d'école consistant à créer un site de CRM en python a
 
     Modèle physique de données : 
 
-  ![Modèle physique de donnée](model/MPD.png)
+  ![Modèle physique de donnée](static/media/img/MPD.png)
 
 ## Framework
 ----------------------------
