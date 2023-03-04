@@ -1,10 +1,12 @@
-body{
-    display: flex;
-    width: 100vw;
-    height: 100vw;
-    margin: 0;
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
+/* style de la navbar */
 .navbar {
     align-items: center;
     justify-content: space-between;
@@ -25,8 +27,6 @@ body{
     margin-left: 10px;
   }
   
-  /* Responsive styles */
-  
   @media (max-width: 768px) {
     .navbar {
       flex-direction: column;
@@ -42,6 +42,12 @@ body{
       margin-right: 10px;
     }
   }
+
+.error-redirect{
+  text-align: center;
+}
+
+/* style de l'easter-egg*/
 .easter-egg-redirect {
   position: fixed;
   bottom: 10px;

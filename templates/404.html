@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Page introuvable</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-    <script src="../static/js/404.js"></script>
-</head>
-<body>
-  {% extends base %}
+{% extends 'base.html' %}
   <!-- Exports header and navbar from header.html or any file you want-->
   {% block title %}ERREUR 404 - Page introuvable{% endblock %}
   {% block body %}
-
-    <h1>Il semblerait que la page que vous recherchez n'existe pas</h1>
-    <audio id="musique" src="../static/media/audio/musique_ic.wav"></audio>
-    <a href="easter-egg.html" onmouseover="sound()" onmouseout="stopsound()" class="easter-egg-redirect">
-      <img alt="easter egg" src="../static/media/img/logo_ic.webp" class="logo-ic">
-    </a>
-    <a href="{{ url_for('listTitanicRecord') }}"><p>Cliquez ici pour retourner à la page d'accueil</p></a>
+    <script src="../static/js/404.js"></script>
+    <div class="error-box">
+      <h1>Il semblerait que la page que vous recherchez n'existe pas</h1>
+      <audio id="musique" src="../static/media/audio/musique_ic.wav"></audio>
+      <a href="easter-egg.html" onmouseover="sound()" onmouseout="stopsound()" class="easter-egg-redirect">
+        <img alt="easter egg" src="../static/media/img/logo_ic.webp" class="logo-ic">
+      </a>
+      <a href="{{ url_for('listTitanicRecord') }}"><p class="error">Cliquez ici pour retourner à la page d'accueil</p></a>
+    </div>
   {% endblock %}
 </body>
 </html>

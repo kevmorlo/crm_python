@@ -4,6 +4,7 @@ var lastPlayedMusic = "";
 // La fonction sound() joue la musique et stocke son URL dans la variable globale
 function sound() {
   var music = document.getElementById("musique");
+  music.loop = true;
   lastPlayedMusic = music.src;
   music.play();
 }
