@@ -13,11 +13,12 @@
             <img src="votre-image.jpg" alt="Logo">
         </div>
         <div class="menu">
+            <a href="{{ url_for('index') }}">Accueil</a>
         {% if session['user_is_connected'] %}
             <a href="{{ url_for('disconnect')}}">Se déconnecter</a>
         {% else %}
             <a href="#">Param</a>
-            <a href="#">Se connecter</a>
+            <a href="{{ url_for('login') }}">Se connecter</a>
         {% endif %}
         </div>
     </nav>

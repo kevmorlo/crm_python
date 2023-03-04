@@ -22,14 +22,14 @@ class UserLogin():
     
     def try_login(self):
         conn = mysql.connect()
-        query = "SELECT email, password, sel FROM utilisateur WHERE email=%(email)s"
+        query = "SELECT email, mot_de_passe, sel FROM utilisateur WHERE email=%(email)s"
         values = {'email': self.__email}
         cursor = conn.cursor()
         cursor.execute(query, values)
         user = cursor.fetchone()
         if user:
             if self.check_password(user[2], user[1]):
-                query = "SELECT siren, nom_entreprise, telephone, email, password, iban, adresse, ville, code_postal  FROM utilisateur WHERE email=%(email)s"
+                query = "SELECT siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal  FROM utilisateur WHERE email=%(email)s"
                 values = {'email': self.__email}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
@@ -68,8 +68,8 @@ class UserRegister():
                 print(self.__password)
                 print(salt)
                 conn = mysql.connect()
-                query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, password, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(password)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
-                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'password': self.__password,
+                query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
+                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'mot_de_passe': self.__password,
                     'iban': self.__iban, 'adresse': self.__adress, 'ville': self.__city, 'code_postal': self.__postal_code, 'sel':salt}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
