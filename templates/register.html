@@ -8,16 +8,17 @@
 </head>
 <body>
     <form action="{{ url_for('traitement_register') }}" method="POST">
-        <input type="email" name="siren" placeholder="Adresse email">
+        <input type="email" name="email" placeholder="Adresse email">
         <input type="password" name="password" placeholder="Mot de passe">
+        <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe">
         <input type="text" name="siren" placeholder="siren">
-        <input type="password" name="business_name" placeholder="Nom de l'entreprise">
-        <input type="tel" name="tel" placeholder="Téléphone">
+        <input type="text" name="company_name" placeholder="Nom de l'entreprise">
+        <input type="tel" name="phone" placeholder="Téléphone">
         <input type="text" name="iban" placeholder="Iban">
         <input type="text" name="adress" placeholder="adresse">
         <input type="text" name="city" placeholder="Ville">
         <input type="text" name="postal_code" placeholder="Code postal">
-        <input type="submit" name="submit">
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>
