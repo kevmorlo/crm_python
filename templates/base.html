@@ -14,7 +14,7 @@
         </div>
         <div class="menu">
         {% if session['user_is_connected'] %}
-            <a href="#">Se déconnecter</a>
+            <a href="{{ url_for('disconnect')}}">Se déconnecter</a>
         {% else %}
             <a href="#">Param</a>
             <a href="#">Se connecter</a>
