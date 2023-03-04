@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="../static/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
-    </script>
+    <title>Page introuvable</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="../static/js/404.js"></script>
 </head>
 <body>
+  {% extends base %}
   <!-- Exports header and navbar from header.html or any file you want-->
-  {% block title %}ERROR 404 - Page Not Found{% endblock %}
+  {% block title %}ERREUR 404 - Page introuvable{% endblock %}
   {% block body %}
 
-    <h1>Oops! Looks like the page doesn't exist</h1>
-    <a href="{{ url_for('index') }}"><p>Click Here</a> To go to the Home Page</p>
+    <h1>Il semblerait que la page que vous recherchez n'existe pas</h1>
+    <audio id="musique" src="../static/media/audio/musique_ic.wav"></audio>
+    <a href="easter-egg.html" onmouseover="sound()" onmouseout="stopsound()" class="easter-egg-redirect">
+      <img alt="easter egg" src="../static/media/img/logo_ic.webp" class="logo-ic">
+    </a>
+    <a href="{{ url_for('listTitanicRecord') }}"><p>Cliquez ici pour retourner à la page d'accueil</p></a>
   {% endblock %}
 </body>
 </html>

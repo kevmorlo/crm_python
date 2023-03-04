@@ -69,7 +69,7 @@ class UserRegister():
                 print(salt)
                 conn = mysql.connect()
                 query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, password, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(password)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
-                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'password': self.__password, \
+                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'password': self.__password,
                     'iban': self.__iban, 'adresse': self.__adress, 'ville': self.__city, 'code_postal': self.__postal_code, 'sel':salt}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
