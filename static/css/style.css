@@ -39,8 +39,6 @@ body{
     margin-left: 10px;
   }
   
-  /* Responsive styles */
-  
   @media (max-width: 768px) {
     .navbar {
       flex-direction: column;
@@ -56,6 +54,12 @@ body{
       margin-right: 10px;
     }
   }
+
+.error-redirect{
+  text-align: center;
+}
+
+/* style de l'easter-egg*/
 .easter-egg-redirect {
   position: fixed;
   bottom: 10px;
