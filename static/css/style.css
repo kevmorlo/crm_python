@@ -1,11 +1,25 @@
 body{
-    display: flex;
     width: 100vw;
     height: 100vw;
     margin: 0;
 }
 
+.company_list{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.company_item{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border: 1px solid black;
+}
+
 .navbar {
+    display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     background-color: #cfa;

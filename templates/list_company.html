@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block base %}
+<div class="company_list">
+    <div>
+        <a href="{{ url_for('add_new_company') }}">Add new...</a>
+    </div>
+    {% for list in list_company %}
+        <a href="{{ url_for('company', numero=list['siret']) }}">
+            <div class="company_item">
+                {{ list['company_name'] }}
+                {{ list['description'] }}
+                {{ list['url'] }}
+            </div>  
+        </a>
+    {%endfor%}
+</div>
+{% endblock %}

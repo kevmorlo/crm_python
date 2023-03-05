@@ -134,79 +134,22 @@ class UserInformations():
             "postal_code": self.__postal_code
         }
         
-    @property
-    def siren(self):
-        return self.__siren
-    
-    @siren.setter
-    def siren(self, siren):
-        self.__siren = siren
-    
-    @property
-    def company_name(self):
-        return self.__company_name
-    
-    @company_name.setter
-    def company_name(self, company_name):
+class CompanyInformations():
+    def __init__(self, company_name, description, url, siret):
         self.__company_name = company_name
+        self.__description = description
+        self.__url = url
+        self.__siret = siret
     
-    @property
-    def phone(self):
-        return self.__phone
-    
-    @phone.setter
-    def phone(self, phone):
-        self.__phone = phone
-    
-    @property
-    def email(self):
-        return self.__email
-    
-    @email.setter
-    def email(self, email):
-        self.__email = email
+    def to_dict(self):
+        return {
+            "company_name": self.__company_name,
+            "description": self.__description,
+            "url": self.__url,
+            "siret": self.__siret
+        }
         
-    @property
-    def password(self):
-        return self.__password
-    
-    @password.setter
-    def password(self, password):
-        self.__password = password
         
-    @property
-    def iban(self):
-        return self.__iban
-    
-    @iban.setter
-    def iban(self, iban):
-        self.__iban = iban
-        
-    @property
-    def adress(self):
-        return self.__adress
-    
-    @adress.setter
-    def adress(self, adress):
-        self.__adress = adress
-        
-    @property
-    def city(self):
-        return self.__city
-    
-    @city.setter
-    def city(self, city):
-        self.__city = city
-        
-    @property
-    def postal_code(self):
-        return self.__postal_code
-    
-    @postal_code.setter
-    def postal_code(self, postal_code):
-        self.__postal_code = postal_code
-        
-
 @app.route('/')
 def index():
     conn = mysql.connect()
@@ -218,6 +161,48 @@ def index():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+@app.route('/add_new_company', methods=['POST', 'GET'])
+def add_new_company():
+    if request.method == "POST":
+        request_to_dict = {
+            "siret": request.form.get('siret'),
+            "name": request.form.get('name'),
+            "description": request.form.get('description'),
+            "adress": request.form.get('adress'),
+            "city": request.form.get('city'),
+            "postal_code": request.form.get('postal_code'),
+            "url": request.form.get('url'),
+            "user_siren": session['user_infos']['siren']
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "INSERT INTO entreprise(siret, nom, description, adresse, ville, code_postal, url, utilisateur_siren) VALUES (%(siret)s, %(name)s, %(description)s, %(adress)s, %(city)s, %(postal_code)s, %(url)s, %(user_siren)s)"
+        values = (request_to_dict)
+        cursor.execute(query, values)
+        conn.commit()
+        conn.close()
+    return render_template('add_new_company.html')
+        
+
+@app.route('/list_company')
+def list_company():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = "SELECT nom, description, url, siret FROM entreprise WHERE utilisateur_siren=%s"
+    values = (session['user_infos']['siren'])
+    cursor.execute(query, values)
+    list_company = cursor.fetchall()
+    list_company_dict =[]
+    for company_tuple in list_company:
+        company = CompanyInformations(*company_tuple).to_dict()
+        list_company_dict.append(company)
+    conn.close()
+    return render_template('list_company.html', list_company=list_company_dict)
+
+@app.route('/company/<int:numero>')
+def company(numero):
+    return f"Vous avez choisi le siren {numero}"
 
 @app.route('/register')
 def register():
