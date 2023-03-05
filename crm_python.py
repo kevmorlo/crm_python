@@ -251,6 +251,9 @@ def traitement_login():
         user.try_login()
     return redirect(url_for('index'))
 
+@app.route('/easter_egg')
+def easter_egg():
+    return redirect('https://www.youtube.com/watch?v=sZkpGKWCr94')
 
 if __name__ == '__main__':
     app.run(debug=True)
