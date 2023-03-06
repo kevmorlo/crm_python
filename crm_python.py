@@ -149,6 +149,19 @@ class CompanyInformations():
             "siret": self.__siret
         }
         
+class ContactInformations():
+    def __init__(self, name, last_name, post):
+        self.__name = name
+        self.__last_name = last_name
+        self.__post = post
+    
+    def to_dict(self):
+        return {
+            "name": self.__name,
+            "last_name": self.__last_name,
+            "post": self.__post,
+        }
+        
         
 @app.route('/')
 def index():
@@ -200,9 +213,53 @@ def list_company():
     conn.close()
     return render_template('list_company.html', list_company=list_company_dict)
 
-@app.route('/company/<int:numero>')
-def company(numero):
-    return f"Vous avez choisi le siren {numero}"
+@app.route('/company/<int:number>')
+def company(number):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = "SELECT siret FROM entreprise WHERE utilisateur_siren=%s and siret=%s"
+    values = (session['user_infos']['siren'], number)
+    cursor.execute(query, values)
+    is_correct_user = cursor.fetchone()
+    if is_correct_user:
+        cursor = conn.cursor()
+        query = "SELECT nom, prenom, poste FROM contact WHERE entreprise_siret=%s and entreprise_utilisateur_siren=%s"
+        values = (number, session['user_infos']['siren'])
+        cursor.execute(query, values)
+        list_contact = cursor.fetchall()
+        list_contact_dict = []
+        for contact_tuple in list_contact:
+            contact = ContactInformations(*contact_tuple).to_dict()
+            list_contact_dict.append(contact)
+    else:
+        return redirect(url_for('index'))
+    conn.close()
+    return render_template('company.html', contacts=list_contact, number=number)
+
+@app.route('/add_new_contact/<int:number>', methods=['POST', 'GET'])
+def add_new_contact(number):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = "SELECT id, nom FROM statut"
+    cursor.execute(query)
+    status = cursor.fetchall()
+    if request.method == "POST":
+        request_to_dict = {
+            "name": request.form.get('name'),
+            "last_name": request.form.get('last_name'),
+            "email": request.form.get('email'),
+            "phone": request.form.get('phone'),
+            "statut_id": request.form.get('statut_id'),
+            "post": request.form.get('post'),
+            "company_siret": number
+        }
+        cursor = conn.cursor()
+        query = "INSERT INTO contact(nom, prenom, email, telephone, entreprise_siret, statut_id, poste) VALUES (%(last_name)s, %(name)s, %(email)s, %(phone)s, %(company_siret)s, %(statut_id)s, %(post)s)"
+        values = (request_to_dict)
+        cursor.execute(query, values)
+        conn.commit()
+    conn.close()
+    return render_template('add_new_contact.html', status=status, number=number)
 
 @app.route('/register')
 def register():

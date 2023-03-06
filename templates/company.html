@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+<div>
+    {% block base %}
+        <a href="{{ url_for('add_new_contact', number=number) }}">Add new contact</a>
+        <div>
+        {% for contact in contacts %}
+            </div>
+                {{ contact[0] }}
+                {{ contact[1] }}
+                {{ contact[2 ]}}
+                <hr>
+            </div>
+        {%endfor%}
+        </div>
+    {% endblock %}
+</div>
