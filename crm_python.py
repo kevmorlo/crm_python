@@ -65,8 +65,6 @@ class UserRegister():
         if not self.is_email_exist() or not self.is_siren_exist():
             if self.check_password():
                 self.__password, salt = self.hash_password()
-                print(self.__password)
-                print(salt)
                 conn = mysql.connect()
                 query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
                 values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'mot_de_passe': self.__password,
@@ -150,17 +148,23 @@ class CompanyInformations():
         }
         
 class ContactInformations():
-    def __init__(self, name, last_name, post):
+    def __init__(self, name, last_name, post, id):
         self.__name = name
         self.__last_name = last_name
         self.__post = post
+        self.__id = id
     
     def to_dict(self):
         return {
             "name": self.__name,
             "last_name": self.__last_name,
             "post": self.__post,
+            "id": self.__id,
         }
+        
+class NewInvoice():
+    def __init__(self, invoice_infos):
+        print(invoice_infos)
         
         
 @app.route('/')
@@ -173,10 +177,16 @@ def index():
 
 @app.errorhandler(404)
 def page_not_found(error):
+    '''
+    Gère la page 404
+    '''
     return render_template('404.html'), 404
 
 @app.route('/add_new_company', methods=['POST', 'GET'])
 def add_new_company():
+    '''
+    Ajoute une nouvelle entreprise à un utilisateur
+    '''
     if request.method == "POST":
         request_to_dict = {
             "siret": request.form.get('siret'),
@@ -190,7 +200,8 @@ def add_new_company():
         }
         conn = mysql.connect()
         cursor = conn.cursor()
-        query = "INSERT INTO entreprise(siret, nom, description, adresse, ville, code_postal, url, utilisateur_siren) VALUES (%(siret)s, %(name)s, %(description)s, %(adress)s, %(city)s, %(postal_code)s, %(url)s, %(user_siren)s)"
+        query = "INSERT INTO entreprise(siret, nom, description, adresse, ville, code_postal, url, utilisateur_siren) " \
+            " VALUES (%(siret)s, %(name)s, %(description)s, %(adress)s, %(city)s, %(postal_code)s, %(url)s, %(user_siren)s)"
         values = (request_to_dict)
         cursor.execute(query, values)
         conn.commit()
@@ -200,6 +211,9 @@ def add_new_company():
 
 @app.route('/list_company')
 def list_company():
+    '''
+    Liste de toutes les entreprises qu'a un utilisateur
+    '''
     conn = mysql.connect()
     cursor = conn.cursor()
     query = "SELECT nom, description, url, siret FROM entreprise WHERE utilisateur_siren=%s"
@@ -215,6 +229,9 @@ def list_company():
 
 @app.route('/company/<int:number>')
 def company(number):
+    '''
+    Affiche tous les contacts d'une entreprise en particulier
+    '''
     conn = mysql.connect()
     cursor = conn.cursor()
     query = "SELECT siret FROM entreprise WHERE utilisateur_siren=%s and siret=%s"
@@ -223,7 +240,7 @@ def company(number):
     is_correct_user = cursor.fetchone()
     if is_correct_user:
         cursor = conn.cursor()
-        query = "SELECT nom, prenom, poste FROM contact WHERE entreprise_siret=%s and entreprise_utilisateur_siren=%s"
+        query = "SELECT nom, prenom, poste, id FROM contact WHERE entreprise_siret=%s and entreprise_utilisateur_siren=%s"
         values = (number, session['user_infos']['siren'])
         cursor.execute(query, values)
         list_contact = cursor.fetchall()
@@ -234,10 +251,13 @@ def company(number):
     else:
         return redirect(url_for('index'))
     conn.close()
-    return render_template('company.html', contacts=list_contact, number=number)
+    return render_template('company.html', contacts=list_contact, siret=number)
 
 @app.route('/add_new_contact/<int:number>', methods=['POST', 'GET'])
 def add_new_contact(number):
+    '''
+    Permet d'ajouter un nouveau contact à une entreprise spécifique
+    '''
     conn = mysql.connect()
     cursor = conn.cursor()
     query = "SELECT id, nom FROM statut"
@@ -251,15 +271,45 @@ def add_new_contact(number):
             "phone": request.form.get('phone'),
             "statut_id": request.form.get('statut_id'),
             "post": request.form.get('post'),
-            "company_siret": number
+            "company_siret": number,
+            "user_siren": session['user_infos']['siren'],
         }
         cursor = conn.cursor()
-        query = "INSERT INTO contact(nom, prenom, email, telephone, entreprise_siret, statut_id, poste) VALUES (%(last_name)s, %(name)s, %(email)s, %(phone)s, %(company_siret)s, %(statut_id)s, %(post)s)"
+        query = "INSERT INTO contact(nom, prenom, email, telephone, entreprise_siret, entreprise_utilisateur_siren, statut_id, poste) " \
+            "VALUES (%(last_name)s, %(name)s, %(email)s, %(phone)s, %(company_siret)s, %(user_siren)s, %(statut_id)s, %(post)s)"
         values = (request_to_dict)
         cursor.execute(query, values)
         conn.commit()
     conn.close()
     return render_template('add_new_contact.html', status=status, number=number)
+
+@app.route('/generate_invoice', methods=['POST', 'GET'])
+def generate_invoice():
+    '''
+    Permet de générer la facture au format PDF
+    '''
+    if request.method == "POST":
+        post_dict = {
+            "contact_id": request.form['contact_id'],
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "SELECT contact.nom, entreprise.nom, entreprise.adresse, entreprise.ville, entreprise.code_postal, utilisateur.nom_entreprise, " \
+                "utilisateur.adresse, utilisateur.code_postal, utilisateur.ville, utilisateur.siren, utilisateur.telephone, utilisateur.email, utilisateur.iban FROM contact " \
+                "INNER JOIN entreprise ON contact.entreprise_siret = entreprise.siret AND contact.entreprise_utilisateur_siren = entreprise.utilisateur_siren " \
+                "INNER JOIN utilisateur ON entreprise.utilisateur_siren = utilisateur.siren " \
+                "WHERE contact.id=%(contact_id)s"
+        cursor.execute(query, post_dict)
+        invoice_infos = cursor.fetchall()
+        invoice = NewInvoice(invoice_infos)
+        
+        #TODO
+        
+        conn.close()
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+    
 
 @app.route('/register')
 def register():
@@ -279,6 +329,9 @@ def login():
 
 @app.route('/traitement_register', methods=["POST", "GET"])
 def traitement_register():
+    '''
+    Page de traitement pour créer un nouvel utilisateur
+    '''
     if request.method == "POST":
         user_form = request.form.to_dict()
         user = UserRegister(**user_form)
@@ -287,6 +340,9 @@ def traitement_register():
     
 @app.route('/traitement_login', methods=["POST", "GET"])
 def traitement_login():
+    '''
+    Page de traitement pour se connecter
+    '''
     if request.method == "POST":
         user_form = request.form.to_dict()
         user = UserLogin(**user_form)
@@ -295,6 +351,9 @@ def traitement_login():
 
 @app.route('/easter_egg')
 def easter_egg():
+    '''
+    Ester egg
+    '''
     return redirect('https://www.youtube.com/watch?v=sZkpGKWCr94')
 
 if __name__ == '__main__':
