@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flaskext.mysql import MySQL
 import argon2
 import secrets
 import uuid
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import PCMYKColor
+from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)   
 
@@ -10,11 +14,14 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['MYSQL_DATABASE_DB'] = 'crm'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['SECRET_KEY'] ="a773df62bbef3b540055f1689cde7d04577da32ed8b7b68df8bd5278b3972a3c"
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
+
 
 mysql = MySQL()
 mysql.init_app(app)
 
-app.secret_key ="a773df62bbef3b540055f1689cde7d04577da32ed8b7b68df8bd5278b3972a3c"
+
 
 class UserLogin():
     def __init__(self, email, password):
@@ -38,6 +45,7 @@ class UserLogin():
                 user_infos = UserInformations(*user_infos)
                 session['user_is_connected'] = True
                 session['user_infos'] = user_infos.to_dict()
+                session['last_login'] = datetime.now()
                 print('User logged')
         else:
             print("Le compte n'a pas été trouvé")
@@ -197,20 +205,75 @@ class NewInvoice():
         }
     
     def make_invoice(self, invoice_infos, contact_id):
+        num_facture = uuid.uuid4()
+        self.__draw_invoice(num_facture, invoice_infos)
         conn = mysql.connect()
         cursor = conn.cursor()
-        query = "INSERT INTO facture(num_facture, date, adresse, utilisateur_siren, contact_id) VALUES(%(num_facture)s, NOW(), %(adresse)s, %(utilisateur_siren)s, %(contact_id)s)"
+        query = "INSERT INTO facture(num_facture, adresse, utilisateur_siren, contact_id) VALUES(%(num_facture)s, %(adresse)s, %(utilisateur_siren)s, %(contact_id)s)"
         invoce_dict = {
-            'num_facture': uuid.uuid4(),
+            'num_facture': num_facture,
             'utilisateur_siren': self.__user_siren,
             'contact_id': contact_id,
+            'adresse': f"invoices/facture_{num_facture}.pdf",
         }
         cursor.execute(query, invoce_dict)
         conn.commit()
         conn.close()
+        
+    def __draw_invoice(self, num_facture, invoice_infos):
+        pdf_file = canvas.Canvas(f"invoices/facture_{num_facture}.pdf", pagesize=letter)
+        
+        # Titres de la facture
+        pdf_file.setFont("Helvetica-Bold", 20)
+        pdf_file.drawString(10,765, "{}".format(invoice_infos['user_name']))
+        pdf_file.drawString(380, 680, "FACTURE")
+        pdf_file.drawString(380, 570, "{}".format(invoice_infos['company_name']))
+        
+        # Informations sur l'utilisateur qui créer la facture
+        pdf_file.setFont("Helvetica", 12)
+        pdf_file.drawString(10, 745, "{}".format(invoice_infos['user_adress']))
+        pdf_file.drawString(10, 730, "{} {}".format(invoice_infos['user_postal_code'], invoice_infos['user_city']))
+        pdf_file.drawString(10, 660, "N° de SIREN {}".format(invoice_infos['user_siren']))
+        pdf_file.drawString(45, 630, "{}".format(invoice_infos['user_phone']))
+        pdf_file.drawString(55, 610, "{}".format(invoice_infos['user_email']))
+        pdf_file.drawString(50, 590, "{}".format(invoice_infos['user_iban']))
+        
+        # Pour mettre en gras les infos
+        pdf_file.setFont("Helvetica-Bold", 12)
+        pdf_file.drawString(10, 630, "Tel. :")
+        pdf_file.drawString(10, 610, "Email :")
+        pdf_file.drawString(10, 590, "IBAN :")
+        
+        # Informations sur le prospect
+        pdf_file.setFont("Helvetica", 12)
+        pdf_file.drawString(380, 550, "{}".format(invoice_infos['contact_name']))
+        pdf_file.drawString(380, 535, "{}".format(invoice_infos['company_adress']))
+        pdf_file.drawString(380, 520, "{} {}".format(invoice_infos['company_postal_code'], invoice_infos['company_city']))
+        
+        # Partie pour faire le numéro et date de facture
+        pdf_file.setFont("Helvetica-Bold", 12)
+        gray = PCMYKColor(0, 0, 0, 10, alpha=100)
+        pdf_file.setFillColor(gray)
+        pdf_file.rect(0, 540, 300, 20, fill=1, stroke=0)
+        pdf_file.setFillColorRGB(0,0,0)
+        pdf_file.drawString(10, 545, "Facture")
+        pdf_file.drawString(180, 545, "Date")
+        pdf_file.setFont("Helvetica", 8)
+        pdf_file.drawString(10, 530, "{}".format(num_facture))
+        pdf_file.drawString(180, 530, "{}".format(datetime.now().date()))
+        
+        
+        pdf_file.save()
 
-        
-        
+
+@app.before_request
+def check_user_logged_in():
+    '''
+    utilisateur non connecté, rediriger vers la page de connexion
+    '''
+    if not session.get('user_id') and request.endpoint not in ['login', 'register', 'index', 'page_not_found', 'traitement_login', 'traitement_register']:
+        return redirect(url_for('login'))
+    
 @app.route('/')
 def index():
     conn = mysql.connect()
@@ -348,13 +411,26 @@ def generate_invoice():
         invoice = NewInvoice(invoice_infos)
         invoice_infos = invoice.to_dict()
         invoice.make_invoice(invoice_infos, post_dict['contact_id'])
-        #TODO
-        
         conn.close()
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
     
+@app.route('/add_comment')
+def add_comment():
+    '''
+    Permet d'ajouter un commentaire sur un contact
+    '''
+    pass
+    #TODO
+    
+@app.route('/list_comment')
+def list_comment():
+    '''
+    Permet de voir la liste des commentaires sur un contact
+    '''
+    pass
+    #TODO
 
 @app.route('/register')
 def register():
