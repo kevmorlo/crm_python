@@ -1,7 +1,7 @@
 body{
-    width: 100vw;
-    height: 100vw;
-    margin: 0;
+    width: 98%;
+    height: 98%;
+    margin: 8;
 }
 
 .company_list{
@@ -55,15 +55,17 @@ body{
     }
   }
 
-.error-redirect{
-  text-align: center;
+.error-box{
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
 }
 
 /* style de l'easter-egg*/
 .easter-egg-redirect {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
+  bottom: 2%;
+  right: -20%;
 }
 
 .logo-ic{
