@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flaskext.mysql import MySQL
 import argon2
 import secrets
+import uuid
 
 app = Flask(__name__)   
 
@@ -164,7 +165,50 @@ class ContactInformations():
         
 class NewInvoice():
     def __init__(self, invoice_infos):
-        print(invoice_infos)
+        self.__contact_name = invoice_infos[0]
+        self.__company_name = invoice_infos[1]
+        self.__company_adress = invoice_infos[2]
+        self.__company_city = invoice_infos[3]
+        self.__company_postal_code = invoice_infos[4]
+        self.__user_name = invoice_infos[5]
+        self.__user_adress = invoice_infos[6]
+        self.__user_postal_code = invoice_infos[7]
+        self.__user_city = invoice_infos[8]
+        self.__user_siren = invoice_infos[9]
+        self.__user_phone = invoice_infos[10]
+        self.__user_email = invoice_infos[11]
+        self.__user_iban = invoice_infos[12]
+
+    def to_dict(self):
+        return {
+            "contact_name": self.__contact_name,
+            "company_name": self.__company_name,
+            "company_adress": self.__company_adress,
+            "company_city": self.__company_city,
+            "company_postal_code": self.__company_postal_code,
+            "user_name": self.__user_name,
+            "user_adress": self.__user_adress,
+            "user_postal_code": self.__user_postal_code,
+            "user_city": self.__user_city,
+            "user_siren": self.__user_siren,
+            "user_phone": self.__user_phone,
+            "user_email": self.__user_email,
+            "user_iban": self.__user_iban,
+        }
+    
+    def make_invoice(self, invoice_infos, contact_id):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "INSERT INTO facture(num_facture, date, adresse, utilisateur_siren, contact_id) VALUES(%(num_facture)s, NOW(), %(adresse)s, %(utilisateur_siren)s, %(contact_id)s)"
+        invoce_dict = {
+            'num_facture': uuid.uuid4(),
+            'utilisateur_siren': self.__user_siren,
+            'contact_id': contact_id,
+        }
+        cursor.execute(query, invoce_dict)
+        conn.commit()
+        conn.close()
+
         
         
 @app.route('/')
@@ -300,9 +344,10 @@ def generate_invoice():
                 "INNER JOIN utilisateur ON entreprise.utilisateur_siren = utilisateur.siren " \
                 "WHERE contact.id=%(contact_id)s"
         cursor.execute(query, post_dict)
-        invoice_infos = cursor.fetchall()
+        invoice_infos = cursor.fetchone()
         invoice = NewInvoice(invoice_infos)
-        
+        invoice_infos = invoice.to_dict()
+        invoice.make_invoice(invoice_infos, post_dict['contact_id'])
         #TODO
         
         conn.close()
