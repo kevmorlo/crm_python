@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block base %}
+ <form method="POST" action="{{ url_for('add_new_contact', number=number) }}">
+    <input type="text" name="name" placeholder="Prenom">
+    <input type="text" name="last_name" placeholder="Nom de famille">
+    <input type="email" name="email" placeholder="Email">
+    <input type="text" name="phone" placeholder="Téléphone">
+    <input type="text" name="post" placeholder="Poste actuel">
+    <select name="statut_id">
+        {% for statut in status %}
+        <option value="{{ statut[0] }}">{{ statut[1] }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Submit</button>
+
+ </form>
+{% endblock %}

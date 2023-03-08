@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<div>
+    {% block base %}
+        <a href="{{ url_for('add_new_contact', number=siret) }}">Add new contact</a>
+        <div>
+        {% for contact in contacts %}
+            </div>
+                {{ contact[0] }}
+                {{ contact[1] }}
+                {{ contact[2] }}
+                <form method="POST" action="{{ url_for('generate_invoice') }}">
+                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                    <button type="submit">Générer une facture</button>
+                </form>                
+                <hr>
+            </div>
+        {%endfor%}
+        </div>
+    {% endblock %}
+</div>

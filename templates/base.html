@@ -16,9 +16,10 @@
         <div class="menu">
             <a href="{{ url_for('index') }}">Accueil</a>
         {% if session['user_is_connected'] %}
+            <a href="#">Param</a>
+            <a href="{{ url_for('list_company') }}">Mes entreprises</a>
             <a href="{{ url_for('disconnect')}}">Se déconnecter</a>
         {% else %}
-            <a href="#">Param</a>
             <a href="{{ url_for('login') }}">Se connecter</a>
         {% endif %}
         </div>
