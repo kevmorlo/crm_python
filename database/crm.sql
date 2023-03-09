@@ -105,19 +105,19 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `crm`.`description`
+-- Table `crm`.`commentaire`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `crm`.`description` ;
+DROP TABLE IF EXISTS `crm`.`commentaire` ;
 
-CREATE TABLE IF NOT EXISTS `crm`.`description` (
+CREATE TABLE IF NOT EXISTS `crm`.`commentaire` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `date_de_creation` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `description` VARCHAR(255) NOT NULL,
   `contact_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_description_contact1_idx` (`contact_id` ASC) VISIBLE,
-  CONSTRAINT `fk_description_contact1`
+  INDEX `fk_commentaire_contact1_idx` (`contact_id` ASC) VISIBLE,
+  CONSTRAINT `fk_commentaire_contact1`
     FOREIGN KEY (`contact_id`)
     REFERENCES `crm`.`contact` (`id`)
     ON DELETE NO ACTION

@@ -209,12 +209,12 @@ class NewInvoice():
         self.__draw_invoice(num_facture, invoice_infos)
         conn = mysql.connect()
         cursor = conn.cursor()
-        query = "INSERT INTO facture(num_facture, adresse, utilisateur_siren, contact_id) VALUES(%(num_facture)s, %(adresse)s, %(utilisateur_siren)s, %(contact_id)s)"
+        query = "INSERT INTO facture(num_facture, chemin, utilisateur_siren, contact_id) VALUES(%(num_facture)s, %(chemin)s, %(utilisateur_siren)s, %(contact_id)s)"
         invoce_dict = {
             'num_facture': num_facture,
             'utilisateur_siren': self.__user_siren,
             'contact_id': contact_id,
-            'adresse': f"invoices/facture_{num_facture}.pdf",
+            'chemin': f"invoices/facture_{num_facture}.pdf",
         }
         cursor.execute(query, invoce_dict)
         conn.commit()
@@ -271,7 +271,7 @@ def check_user_logged_in():
     '''
     utilisateur non connecté, rediriger vers la page de connexion
     '''
-    if not session.get('user_id') and request.endpoint not in ['login', 'register', 'index', 'page_not_found', 'traitement_login', 'traitement_register']:
+    if not session.get('user_infos') and request.endpoint not in ['login', 'register', 'index', 'page_not_found', 'traitement_login', 'traitement_register']:
         return redirect(url_for('login'))
     
 @app.route('/')
@@ -416,13 +416,25 @@ def generate_invoice():
     else:
         return redirect(url_for('index'))
     
-@app.route('/add_comment')
+@app.route('/add_comment', methods=['POST'])
 def add_comment():
     '''
     Permet d'ajouter un commentaire sur un contact
     '''
-    pass
-    #TODO
+    #TODO -> au final il faut rajouter l'utilisateur ID et changer l'UI
+    if request.form.get('comment'):
+        request_dict = {
+            'contact_id': request.form.get('contact_id'),
+            'description': request.form.get('comment'),
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "INSERT INTO commentaire(description, contact_id) VALUES (%(description)s, %(contact_id)s)"
+        cursor.execute(query, request_dict)
+        conn.commit()
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_new_comment.html', contact_id=request.form.get('contact_id'))
     
 @app.route('/list_comment')
 def list_comment():
@@ -430,7 +442,12 @@ def list_comment():
     Permet de voir la liste des commentaires sur un contact
     '''
     pass
-    #TODO
+    # conn = mysql.connect()
+    # cursor = conn.cursor()
+    # query = "SELECT "
+    # cursor.execute(query)
+    # conn.commit()
+    # conn.close()
 
 @app.route('/register')
 def register():
