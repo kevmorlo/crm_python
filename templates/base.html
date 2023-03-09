@@ -14,13 +14,23 @@
             <img src="../static/media/img/head-logo-ljbac.png" alt="Logo LJBAC">
         </div>
         <div class="menu">
-            <a href="{{ url_for('index') }}">Accueil</a>
+            <a href="{{ url_for('index') }}">
+                <img class="base_icon" alt="Accueil" src="../static/media/img/icone_accueil.svg"></img>
+            </a>
         {% if session['user_is_connected'] %}
-            <a href="#">Param</a>
-            <a href="{{ url_for('list_company') }}">Mes entreprises</a>
-            <a href="{{ url_for('disconnect')}}">Se déconnecter</a>
+            <a href="#">
+                <img class="base_icon" alt="Paramètres" src="../static/media/img/icone_param.svg"></img>
+            </a>
+            <a href="{{ url_for('list_company') }}">
+                <img class="base_icon" alt="Mes entreprises" src="../static/media/img/icone_boites.svg"></img>
+            </a>
+            <a href="{{ url_for('disconnect')}}">
+                <img class="base_icon" alt="Se déconnecter" src="../static/media/img/icone_decon.svg"></img>
+            </a>
         {% else %}
-            <a href="{{ url_for('login') }}">Se connecter</a>
+            <a href="{{ url_for('login') }}">
+                <img class="base_icon" alt="Se connecter" src="../static/media/img/icone_con.svg"></img>
+            </a>
         {% endif %}
         </div>
     </nav>
