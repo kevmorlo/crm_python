@@ -2,7 +2,7 @@
 
 <div>
     {% block base %}
-        <a href="{{ url_for('add_new_contact', number=siret) }}">Add new contact</a>
+        <a href="{{ url_for('add_new_contact', number=siret) }}">Ajouter un contact</a>
         <div>
         {% for contact in contacts %}
             </div>
@@ -13,6 +13,10 @@
                     <input type="hidden" name="contact_id" value="{{ contact[3] }}">
                     <button type="submit">Générer une facture</button>
                 </form>                
+                <form method="POST" action="{{ url_for('add_comment') }}">
+                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                    <button type="submit">Ajouter un commentaire</button>
+                </form>
                 <hr>
             </div>
         {%endfor%}
