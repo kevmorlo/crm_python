@@ -2,6 +2,15 @@
 
 {% block base %}
 
-
+    <form method="POST" action="{{ url_for('add_comment') }}">
+        <input type="hidden" name="contact_id" value="{{ contact_id }}">
+        <button type="submit">Ajouter un commentaire</button>
+    </form>
+    {% for comment in comments %}
+        <p>
+            {{ comment[0] }}
+        </p>
+        <hr>
+    {% endfor %}
 
 {% endblock %}

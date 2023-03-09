@@ -289,6 +289,15 @@ def page_not_found(error):
     '''
     return render_template('404.html'), 404
 
+@app.route('/parameters')
+def parameters():
+    '''
+    Permet de changer les informations sur un compte utilisateur
+    '''
+    pass
+    #TODO -> a mon avis il faut changer un petit peu les classes, on peut
+    #faire une classe mere et UserInformations, UserRegister et UserParameters va en hériter
+
 @app.route('/add_new_company', methods=['POST', 'GET'])
 def add_new_company():
     '''
@@ -422,6 +431,7 @@ def add_comment():
     Permet d'ajouter un commentaire sur un contact
     '''
     #TODO -> au final il faut rajouter l'utilisateur ID et changer l'UI
+    #a clarifier avec erwann
     if request.form.get('comment'):
         request_dict = {
             'contact_id': request.form.get('contact_id'),
@@ -436,18 +446,22 @@ def add_comment():
     else:
         return render_template('add_new_comment.html', contact_id=request.form.get('contact_id'))
     
-@app.route('/list_comment')
+@app.route('/list_comment', methods=['POST'])
 def list_comment():
     '''
     Permet de voir la liste des commentaires sur un contact
     '''
-    pass
-    # conn = mysql.connect()
-    # cursor = conn.cursor()
-    # query = "SELECT "
-    # cursor.execute(query)
-    # conn.commit()
-    # conn.close()
+    request_dict = {
+        'contact_id': request.form.get('contact_id')
+    }
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    query = "SELECT description FROM commentaire WHERE contact_id=%(contact_id)s"
+    values = (request_dict)
+    cursor.execute(query, values)
+    comments = cursor.fetchall()
+    conn.close()
+    return render_template('list_comment.html', contact_id=request_dict['contact_id'], comments = comments)
 
 @app.route('/register')
 def register():

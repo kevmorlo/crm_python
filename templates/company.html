@@ -13,9 +13,9 @@
                     <input type="hidden" name="contact_id" value="{{ contact[3] }}">
                     <button type="submit">Générer une facture</button>
                 </form>                
-                <form method="POST" action="{{ url_for('add_comment') }}">
+                <form method="POST" action="{{ url_for('list_comment') }}">
                     <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                    <button type="submit">Ajouter un commentaire</button>
+                    <button type="submit">Liste des commentaires</button>
                 </form>
                 <hr>
             </div>
