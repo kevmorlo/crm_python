@@ -3,17 +3,18 @@
 {% block base %}
     <div class="form-container">
         <form action="{{ url_for('traitement_register') }}" method="POST" class="form">
+            <h1 class="register-h1">Créer un compte</h1>
             <input type="email" name="email" placeholder="Adresse email" class="form-input" required>
             <input type="password" name="password" placeholder="Mot de passe" class="form-input" required>
             <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe" class="form-input" required>
-            <input type="text" name="siren" placeholder="siren" class="form-input" required>
-            <input type="text" name="name" placeholder="Nom de l'entreprise" class="form-input" required>
+            <input type="text" name="siren" placeholder="Siren" class="form-input" required>
+            <input type="text" name="name" placeholder="Nom de l'entreprise" class="form-input" id="form-telephone" required>
             <input type="tel" name="phone" placeholder="Téléphone" class="form-input" required>
-            <input type="text" name="iban" placeholder="Iban" class="form-input" required>
-            <input type="text" name="adress" placeholder="adresse" class="form-input" required>
-            <input type="text" name="city" placeholder="Ville" class="form-input" required>
-            <input type="text" name="postal_code" placeholder="Code postal" class="form-input" required>
-            <button type="submit" class="form-button">Submit</button>
+            <input type="text" name="iban" placeholder="Iban" class="form-input" id="form-iban" required>
+            <input type="text" name="adress" placeholder="Adresse" class="form-input" id="form-adress" required>
+            <input type="text" name="city" placeholder="Ville" class="form-input" id="form-city" required>
+            <input type="text" name="postal_code" placeholder="Code postal" class="form-input" id="form-code-postal" required>
+            <button type="submit" class="form-button">Créer un compte</button>
         </form>
     </div>
 {% endblock %}

@@ -4,11 +4,13 @@ body{
     height: 100%;
     margin: 0;
     cursor: auto;
-    background-color: #F8F3F2;
+    background-color: #F1F8E9;
 }
 
 h1{
   font-family: 'Libre Franklin', sans-serif;
+  text-align: center;
+  margin: 20px;
 }
 
 .company_list{
@@ -29,7 +31,7 @@ h1{
     width: 100%;
     align-items: center;
     justify-content: space-between;
-    background-color: #CFF2EA;
+    background-color: #C5E1A5;
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -107,25 +109,19 @@ h1{
   }
 }
 
-.error-h1{
-  text-align: center;
-}
-
-.login-h1{
-  text-align: center;
-}
-
 .form-container{
   display: flex;
   justify-content: center;
 }
 
 .form{
-  background-color: white;
+  background-color: #ffffff;
   border: None;
-  border-radius: 3px;
+  border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-  padding: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   width: 70%;
@@ -134,7 +130,7 @@ h1{
 
 .form-input{
   color: rgb(38, 50, 56);
-  background: rgba(136, 126, 126, 0.04);
+  background: rgba(136, 126, 126, 0.15);
   font-family: 'Libre Franklin', sans-serif;
   font-weight: 700;
   font-size: 14px;
@@ -146,10 +142,16 @@ h1{
   box-sizing: border-box;
   border: 2px solid rgba(0, 0, 0, 0.02);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   margin-left: 5%;
   margin-right: 5%;
   transition: border .3s;
+}
+
+@media (min-width: 769px){
+  .form{
+    width: 600px;
+  }
 }
 
 .form-input:focus{
@@ -165,7 +167,7 @@ h1{
   padding-top: 10px;
   font-family: 'Libre Franklin', sans-serif;
   font-size: 13px;
-  background: #CFF2EA;
+  background: #C5E1A5;
   cursor: pointer;
   border: None;
   border-radius: 25px;
