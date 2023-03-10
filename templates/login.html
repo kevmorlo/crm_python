@@ -3,9 +3,10 @@
     <h1 class="login-h1">Page de connexion</h1>
     <div class="login-container">
         <form method="POST" action="{{ url_for('traitement_login') }}" class="login-form">
-            <input type="email" name="email" placeholder="Adresse email">
-            <input type="password" name="password" placeholder="Mot de passe">
-            <button type="submit">Submit</button>
+            <input type="email" name="email" placeholder="Adresse email" class="form-input">
+            <input type="password" name="password" placeholder="Mot de passe" class="form-input">
+            <button type="submit" class="form-button">Se connecter</button>
+            <a href="{{ url_for('register') }}" class="login-redirect" title="Créer un compte">Créer un compte</a>
         </form>
     </div>
 {% endblock %}
