@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 
 {% block base %}
-    <form action="{{ url_for('traitement_register') }}" method="POST">
-        <input type="email" name="email" placeholder="Adresse email" required>
-        <input type="password" name="password" placeholder="Mot de passe" required>
-        <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe" required>
-        <input type="text" name="siren" placeholder="siren" required>
-        <input type="text" name="name" placeholder="Nom de l'entreprise" required>
-        <input type="tel" name="phone" placeholder="Téléphone" required>
-        <input type="text" name="iban" placeholder="Iban" required>
-        <input type="text" name="adress" placeholder="adresse" required>
-        <input type="text" name="city" placeholder="Ville" required>
-        <input type="text" name="postal_code" placeholder="Code postal" required>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="form-container">
+        <form action="{{ url_for('traitement_register') }}" method="POST" class="form">
+            <input type="email" name="email" placeholder="Adresse email" class="form-input" required>
+            <input type="password" name="password" placeholder="Mot de passe" class="form-input" required>
+            <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe" class="form-input" required>
+            <input type="text" name="siren" placeholder="siren" class="form-input" required>
+            <input type="text" name="name" placeholder="Nom de l'entreprise" class="form-input" required>
+            <input type="tel" name="phone" placeholder="Téléphone" class="form-input" required>
+            <input type="text" name="iban" placeholder="Iban" class="form-input" required>
+            <input type="text" name="adress" placeholder="adresse" class="form-input" required>
+            <input type="text" name="city" placeholder="Ville" class="form-input" required>
+            <input type="text" name="postal_code" placeholder="Code postal" class="form-input" required>
+            <button type="submit" class="form-button">Submit</button>
+        </form>
+    </div>
 {% endblock %}

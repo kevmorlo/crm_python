@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block base %}
     <h1 class="login-h1">Page de connexion</h1>
-    <div class="login-container">
-        <form method="POST" action="{{ url_for('traitement_login') }}" class="login-form">
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('traitement_login') }}" class="form">
             <input type="email" name="email" placeholder="Adresse email" class="form-input" required>
             <input type="password" name="password" placeholder="Mot de passe" class="form-input" required>
             <button type="submit" class="form-button" required>Se connecter</button>
