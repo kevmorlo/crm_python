@@ -53,16 +53,11 @@ Le projet est adapté pour les plateformes mobiles, tablettes ordinateurs (sauf 
 
 ## TODO LIST
 
-### Backend
-
-- Page de connexion
-- Page de création de compte
-- Connexion à la base de donnée
-- Création de nouveaux contacts
-
 ### Frontend
 
-- Absolument tout
+- Finir la navbar, la page de connexion, et la page 404
+- Page de création de compte
+- Page de création de nouveaux contacts
 
 ## Installation du projet
 
