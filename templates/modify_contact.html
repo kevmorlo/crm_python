@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block base %}
+ <form method="POST" action="{{ url_for('modify_contact') }}">
+    <input type="hidden" name="contact_id" value="{{ contact_id }}">
+    <input type="text" name="name" placeholder="Prenom" value="{{ user_infos[1] }}" required>
+    <input type="text" name="last_name" placeholder="Nom de famille" value="{{ user_infos[0] }}" required>
+    <input type="email" name="email" placeholder="Email" value="{{ user_infos[2] }}" required>
+    <input type="text" name="phone" placeholder="Téléphone" value="{{ user_infos[3] }}">
+    <input type="text" name="post" placeholder="Poste actuel" value="{{ user_infos[4] }}">
+    <select name="statut_id">
+        {% for statut in status %}
+        <option value="{{ statut[0] }}"{% if statut[0] == user_infos[5]  %} selected {%endif%}>{{ statut[1] }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Submit</button>
+
+ </form>
+{% endblock %}

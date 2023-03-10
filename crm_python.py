@@ -311,7 +311,6 @@ def parameters():
         conn.close()
         return redirect(url_for('index'))
     else:
-        print(session['user_infos'])
         return render_template('parameters.html', user_infos=session['user_infos'])
 
 @app.route('/add_new_company', methods=['POST', 'GET'])
@@ -348,7 +347,7 @@ def list_company():
     '''
     conn = mysql.connect()
     cursor = conn.cursor()
-    query = "SELECT nom, description, url, siret FROM entreprise WHERE utilisateur_siren=%s"
+    query = "SELECT nom, siret, description, url FROM entreprise WHERE utilisateur_siren=%s"
     values = (session['user_infos']['siren'])
     cursor.execute(query, values)
     list_company = cursor.fetchall()
@@ -414,6 +413,41 @@ def add_new_contact(number):
         conn.commit()
     conn.close()
     return render_template('add_new_contact.html', status=status, number=number)
+
+@app.route('/modify_contact', methods=['POST', 'GET'])
+def modify_contact():
+    if request.form.get('name'):
+        request_to_dict = {
+            "name": request.form.get('name'),
+            "last_name": request.form.get('last_name'),
+            "email": request.form.get('email'),
+            "phone": request.form.get('phone'),
+            "post": request.form.get('post'),
+            "statut_id": request.form.get('statut_id'),
+            "contact_id": request.form.get('contact_id')
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "UPDATE contact SET prenom=%(name)s, nom=%(last_name)s, email=%(email)s, telephone=%(phone)s, " \
+                "poste=%(post)s, statut_id=%(statut_id)s WHERE id=%(contact_id)s"
+        cursor.execute(query, request_to_dict)
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+    else:
+        request_to_dict = {
+            'contact_id': request.form.get('contact_id')
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "SELECT nom, prenom, email, telephone, poste, statut_id FROM contact WHERE id=%(contact_id)s"
+        cursor.execute(query, request_to_dict)
+        contact_infos = cursor.fetchone()
+        query = "SELECT id,nom FROM statut"
+        cursor.execute(query)
+        status = cursor.fetchall()
+        conn.close()
+        return render_template('modify_contact.html', user_infos=contact_infos, status=status, contact_id=request_to_dict['contact_id'])
 
 @app.route('/generate_invoice', methods=['POST', 'GET'])
 def generate_invoice():
