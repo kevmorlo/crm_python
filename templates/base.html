@@ -15,21 +15,21 @@
         </div>
         <div class="menu">
             <a href="{{ url_for('index') }}">
-                <img class="base_icon" alt="Accueil" src="../static/media/img/icone_accueil.svg"></img>
+                <img class="base_icon" alt="Accueil" src="../static/media/img/icone_accueil.svg" title="Accueil"></img>
             </a>
         {% if session['user_is_connected'] %}
             <a href="#">
-                <img class="base_icon" alt="Paramètres" src="../static/media/img/icone_param.svg"></img>
+                <img class="base_icon" alt="Paramètres" src="../static/media/img/icone_param.svg" title="Paramètres"></img>
             </a>
             <a href="{{ url_for('list_company') }}">
-                <img class="base_icon" alt="Mes entreprises" src="../static/media/img/icone_boites.svg"></img>
+                <img class="base_icon" alt="Mes entreprises" src="../static/media/img/icone_boites.svg" title="Mes entreprises"></img>
             </a>
             <a href="{{ url_for('disconnect')}}">
-                <img class="base_icon" alt="Se déconnecter" src="../static/media/img/icone_decon.svg"></img>
+                <img class="base_icon" alt="Se déconnecter" src="../static/media/img/icone_decon.svg" title="Se déconnecter"></img>
             </a>
         {% else %}
             <a href="{{ url_for('login') }}">
-                <img class="base_icon" alt="Se connecter" src="../static/media/img/icone_con.svg"></img>
+                <img class="base_icon" alt="Se connecter" src="../static/media/img/icone_con.svg" title="Se connecter"></img>
             </a>
         {% endif %}
         </div>
