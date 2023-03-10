@@ -267,7 +267,8 @@ def check_user_logged_in():
     '''
     utilisateur non connecté, rediriger vers la page de connexion
     '''
-    if not session.get('user_infos') and request.endpoint not in ['login', 'register', 'index', 'page_not_found', 'traitement_login', 'traitement_register']:
+    print(request)
+    if not session.get('user_infos') and request.endpoint not in ['login', 'register', 'index', 'traitement_login', 'traitement_register', 'static']:
         return redirect(url_for('login'))
     
 @app.route('/')
