@@ -24,9 +24,9 @@ mysql.init_app(app)
 
 
 class User(ABC):
-    def __init__(self, email, password, siren, company_name, phone, iban, adress, city, postal_code):
+    def __init__(self, email, password, siren, name, phone, iban, adress, city, postal_code):
         self._siren = siren
-        self._company_name = company_name
+        self._name = name
         self._phone = phone
         self._email = email
         self._password = password
@@ -70,8 +70,8 @@ class UserLogin():
             return False
 
 class UserRegister(User):
-    def __init__(self, email,password, confirm_password, siren, company_name, phone, iban, adress, city, postal_code):
-        super().__init__(email, password, siren, company_name, phone, iban, adress, city, postal_code)
+    def __init__(self, email,password, confirm_password, siren, name, phone, iban, adress, city, postal_code):
+        super().__init__(email, password, siren, name, phone, iban, adress, city, postal_code)
         self._confirm_password = confirm_password
         
     def try_register(self):
@@ -80,7 +80,7 @@ class UserRegister(User):
                 self._password, salt = self.hash_password()
                 conn = mysql.connect()
                 query = "INSERT INTO utilisateur(siren, nom, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
-                values = {'siren': self._siren, 'nom': self._company_name, 'telephone': self._phone, 'email': self._email, 'mot_de_passe': self._password,
+                values = {'siren': self._siren, 'nom': self._name, 'telephone': self._phone, 'email': self._email, 'mot_de_passe': self._password,
                     'iban': self._iban, 'adresse': self._adress, 'ville': self._city, 'code_postal': self._postal_code, 'sel':salt}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
@@ -123,13 +123,13 @@ class UserRegister(User):
         return siren_already_exist
 
 class UserInformations(User):
-    def __init__(self, siren, company_name, phone, email, password, iban, adress, city, postal_code):
-        super().__init__(email, password, siren, company_name, phone, iban, adress, city, postal_code)
+    def __init__(self, siren, name, phone, email, password, iban, adress, city, postal_code):
+        super().__init__(email, password, siren, company, phone, iban, adress, city, postal_code)
 
     def to_dict(self):
         return {
             "siren": self._siren,
-            "company_name": self._company_name,
+            "name": self._name,
             "phone": self._phone,
             "email": self._email,
             "password": self._password,
@@ -172,7 +172,7 @@ class ContactInformations():
 class NewInvoice():
     def __init__(self, invoice_infos):
         self.__contact_name = invoice_infos[0]
-        self.__company_name = invoice_infos[1]
+        self.__name = invoice_infos[1]
         self.__company_adress = invoice_infos[2]
         self.__company_city = invoice_infos[3]
         self.__company_postal_code = invoice_infos[4]
@@ -188,7 +188,7 @@ class NewInvoice():
     def to_dict(self):
         return {
             "contact_name": self.__contact_name,
-            "company_name": self.__company_name,
+            "name": self.__name,
             "company_adress": self.__company_adress,
             "company_city": self.__company_city,
             "company_postal_code": self.__company_postal_code,
@@ -225,7 +225,7 @@ class NewInvoice():
         pdf_file.setFont("Helvetica-Bold", 20)
         pdf_file.drawString(10,765, "{}".format(invoice_infos['user_name']))
         pdf_file.drawString(380, 680, "FACTURE")
-        pdf_file.drawString(380, 570, "{}".format(invoice_infos['company_name']))
+        pdf_file.drawString(380, 570, "{}".format(invoice_infos['name']))
         
         # Informations sur l'utilisateur qui créer la facture
         pdf_file.setFont("Helvetica", 12)
@@ -259,8 +259,6 @@ class NewInvoice():
         pdf_file.setFont("Helvetica", 8)
         pdf_file.drawString(10, 530, "{}".format(num_facture))
         pdf_file.drawString(180, 530, "{}".format(datetime.now().date()))
-        
-        
         pdf_file.save()
 
 
@@ -438,7 +436,7 @@ def add_comment():
         }
         conn = mysql.connect()
         cursor = conn.cursor()
-        query = "INSERT INTO commentaire(description, contact_id) VALUES (%(description)s, %(contact_id)s)"
+        query = "INSERT INTO commentaire(description, contact_id, auteur) VALUES (%(description)s, %(contact_id)s, %(author)s)"
         cursor.execute(query, request_dict)
         conn.commit()
         return redirect(url_for('index'))
@@ -455,7 +453,7 @@ def list_comment():
     }
     conn = mysql.connect()
     cursor = conn.cursor()
-    query = "SELECT description FROM commentaire WHERE contact_id=%(contact_id)s"
+    query = "SELECT description, auteur FROM commentaire WHERE contact_id=%(contact_id)s"
     values = (request_dict)
     cursor.execute(query, values)
     comments = cursor.fetchall()
