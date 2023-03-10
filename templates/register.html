@@ -2,16 +2,16 @@
 
 {% block base %}
     <form action="{{ url_for('traitement_register') }}" method="POST">
-        <input type="email" name="email" placeholder="Adresse email">
-        <input type="password" name="password" placeholder="Mot de passe">
-        <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe">
-        <input type="text" name="siren" placeholder="siren">
-        <input type="text" name="name" placeholder="Nom de l'entreprise">
-        <input type="tel" name="phone" placeholder="Téléphone">
-        <input type="text" name="iban" placeholder="Iban">
-        <input type="text" name="adress" placeholder="adresse">
-        <input type="text" name="city" placeholder="Ville">
-        <input type="text" name="postal_code" placeholder="Code postal">
+        <input type="email" name="email" placeholder="Adresse email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe" required>
+        <input type="text" name="siren" placeholder="siren" required>
+        <input type="text" name="name" placeholder="Nom de l'entreprise" required>
+        <input type="tel" name="phone" placeholder="Téléphone" required>
+        <input type="text" name="iban" placeholder="Iban" required>
+        <input type="text" name="adress" placeholder="adresse" required>
+        <input type="text" name="city" placeholder="Ville" required>
+        <input type="text" name="postal_code" placeholder="Code postal" required>
         <button type="submit">Submit</button>
     </form>
 {% endblock %}
