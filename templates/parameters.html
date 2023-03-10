@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block base %}
+
+    <form method="POST" action="{{ url_for('parameters') }}">
+        <input type="email" name="email" placeholder="Adresse email" value="{{ user_infos['email'] }}">
+        <input type="text" name="name" placeholder="Nom de l'entreprise" value="{{ user_infos['name'] }}">
+        <input type="tel" name="phone" placeholder="Téléphone" value="{{ user_infos['phone'] }}">
+        <input type="text" name="iban" placeholder="Iban" value="{{ user_infos['iban'] }}">
+        <input type="text" name="adress" placeholder="adresse" value="{{ user_infos['adress'] }}">
+        <input type="text" name="city" placeholder="Ville" value="{{ user_infos['city'] }}">
+        <input type="text" name="postal_code" placeholder="Code postal" value="{{ user_infos['postal_code'] }}">
+        <button type="submit">Submit</button>
+    </form>
+
+{% endblock %}

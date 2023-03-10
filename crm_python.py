@@ -124,7 +124,7 @@ class UserRegister(User):
 
 class UserInformations(User):
     def __init__(self, siren, name, phone, email, password, iban, adress, city, postal_code):
-        super().__init__(email, password, siren, company, phone, iban, adress, city, postal_code)
+        super().__init__(email, password, siren, name, phone, iban, adress, city, postal_code)
 
     def to_dict(self):
         return {
@@ -267,7 +267,6 @@ def check_user_logged_in():
     '''
     utilisateur non connecté, rediriger vers la page de connexion
     '''
-    print(request)
     if not session.get('user_infos') and request.endpoint not in ['login', 'register', 'index', 'traitement_login', 'traitement_register', 'static']:
         return redirect(url_for('login'))
     
@@ -286,14 +285,34 @@ def page_not_found(error):
     '''
     return render_template('404.html'), 404
 
-@app.route('/parameters')
+@app.route('/parameters', methods=['POST', 'GET'])
 def parameters():
     '''
     Permet de changer les informations sur un compte utilisateur
     '''
-    pass
-    #TODO -> a mon avis il faut changer un petit peu les classes, on peut
-    #faire une classe mere et UserInformations, UserRegister et UserParameters va en hériter
+    if request.method == 'POST':
+        request_to_dict = {
+            "siren": request.form.get('siren'),
+            "name": request.form.get('name'),
+            "phone": request.form.get('phone'),
+            "email": request.form.get('email'),
+            "iban": request.form.get('iban'),
+            "adress": request.form.get('adress'),
+            "city": request.form.get('city'),
+            "postal_code": request.form.get('postal_code')
+        }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "UPDATE utilisateur SET nom=%(name)s, telephone=%(phone)s, email=%(email)s, iban=%(iban)s, " \
+                "adresse=%(adress)s, ville=%(city)s, code_postal=%(postal_code)s WHERE siren=%(siren)s"
+        values = (request_to_dict)
+        cursor.execute(query, values)
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+    else:
+        print(session['user_infos'])
+        return render_template('parameters.html', user_infos=session['user_infos'])
 
 @app.route('/add_new_company', methods=['POST', 'GET'])
 def add_new_company():
