@@ -2,12 +2,12 @@
 {% block base %}
 
     <form method="POST" action="{{ url_for('add_new_company')}}">
-        <input type="number" name="siret" placeholder="siret">
-        <input type="text" name="name" placeholder="Nom de l'entreprise">
+        <input type="number" name="siret" placeholder="siret" required>
+        <input type="text" name="name" placeholder="Nom de l'entreprise" required>
         <input type="text" name="description" placeholder="Description de l'entreprise">
-        <input type="text" name="adress" placeholder="Adresse">
-        <input type="text" name="city" placeholder="Ville">
-        <input type="number" name="postal_code" placeholder="Code postal">
+        <input type="text" name="adress" placeholder="Adresse"required>
+        <input type="text" name="city" placeholder="Ville" required>
+        <input type="number" name="postal_code" placeholder="Code postal" required>
         <input type="url" name="url" placeholder="URL">
         <button type="submit">Submit</button>
     </form>

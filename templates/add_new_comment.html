@@ -3,8 +3,8 @@
 {% block base %}
 
 <form method="POST" action="{{ url_for('add_comment') }}">
-    <input type="hidden" name="contact_id" value="{{ contact_id }}">
-    <textarea type="text" name="comment" placeholder="Placez votre commentaire ici"></textarea>
+    <input type="hidden" name="contact_id" value="{{ contact_id }}" required>
+    <textarea type="text" name="comment" placeholder="Placez votre commentaire ici" required></textarea>
     <button type="submit">Envoyer</button>
 </form>
 

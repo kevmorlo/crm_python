@@ -2,9 +2,9 @@
 
 {% block base %}
  <form method="POST" action="{{ url_for('add_new_contact', number=number) }}">
-    <input type="text" name="name" placeholder="Prenom">
-    <input type="text" name="last_name" placeholder="Nom de famille">
-    <input type="email" name="email" placeholder="Email">
+    <input type="text" name="name" placeholder="Prenom" required >
+    <input type="text" name="last_name" placeholder="Nom de famille" required>
+    <input type="email" name="email" placeholder="Email" required>
     <input type="text" name="phone" placeholder="Téléphone">
     <input type="text" name="post" placeholder="Poste actuel">
     <select name="statut_id">

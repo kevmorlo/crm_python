@@ -140,7 +140,7 @@ class UserInformations(User):
         }
         
 class CompanyInformations():
-    def __init__(self, company_name, description, url, siret):
+    def __init__(self, company_name, siret, description: str = '', url:str = ''):
         self.__company_name = company_name
         self.__description = description
         self.__url = url
@@ -452,7 +452,7 @@ def add_comment():
         request_dict = {
             'contact_id': request.form.get('contact_id'),
             'description': request.form.get('comment'),
-            'author': session['user_infos']['nom']
+            'author': session['user_infos']['name']
         }
         conn = mysql.connect()
         cursor = conn.cursor()
