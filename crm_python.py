@@ -6,7 +6,8 @@ import uuid
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import PCMYKColor
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from abc import ABC
 
 app = Flask(__name__)   
 
@@ -22,23 +23,34 @@ mysql = MySQL()
 mysql.init_app(app)
 
 
+class User(ABC):
+    def __init__(self, email, password, siren, company_name, phone, iban, adress, city, postal_code):
+        self._siren = siren
+        self._company_name = company_name
+        self._phone = phone
+        self._email = email
+        self._password = password
+        self._iban = iban
+        self._adress = adress
+        self._city = city
+        self._postal_code = postal_code
 
 class UserLogin():
     def __init__(self, email, password):
-        self.__email = email
-        self.__password = password
+        self._email = email
+        self._password = password
     
     def try_login(self):
         conn = mysql.connect()
         query = "SELECT email, mot_de_passe, sel FROM utilisateur WHERE email=%(email)s"
-        values = {'email': self.__email}
+        values = {'email': self._email}
         cursor = conn.cursor()
         cursor.execute(query, values)
         user = cursor.fetchone()
         if user:
             if self.check_password(user[2], user[1]):
-                query = "SELECT siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal  FROM utilisateur WHERE email=%(email)s"
-                values = {'email': self.__email}
+                query = "SELECT siren, nom, telephone, email, mot_de_passe, iban, adresse, ville, code_postal  FROM utilisateur WHERE email=%(email)s"
+                values = {'email': self._email}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
                 user_infos = cursor.fetchone()
@@ -52,45 +64,39 @@ class UserLogin():
         conn.close()
     
     def check_password(self, salt, hashed_password):
-        if argon2.PasswordHasher().verify(hashed_password, self.__password+salt):
+        if argon2.PasswordHasher().verify(hashed_password, self._password+salt):
             return True
         else:
             return False
 
-class UserRegister():
+class UserRegister(User):
     def __init__(self, email,password, confirm_password, siren, company_name, phone, iban, adress, city, postal_code):
-        self.__siren = siren
-        self.__company_name = company_name
-        self.__phone = phone
-        self.__email = email
-        self.__password = password
-        self.__confirm_password = confirm_password
-        self.__iban = iban
-        self.__adress = adress
-        self.__city = city
-        self.__postal_code = postal_code
+        super().__init__(email, password, siren, company_name, phone, iban, adress, city, postal_code)
+        self._confirm_password = confirm_password
         
     def try_register(self):
-        if not self.is_email_exist() or not self.is_siren_exist():
+        if not self.is_email_exist() and not self.is_siren_exist():
             if self.check_password():
-                self.__password, salt = self.hash_password()
+                self._password, salt = self.hash_password()
                 conn = mysql.connect()
-                query = "INSERT INTO utilisateur(siren, nom_entreprise, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom_entreprise)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
-                values = {'siren': self.__siren, 'nom_entreprise': self.__company_name, 'telephone': self.__phone, 'email': self.__email, 'mot_de_passe': self.__password,
-                    'iban': self.__iban, 'adresse': self.__adress, 'ville': self.__city, 'code_postal': self.__postal_code, 'sel':salt}
+                query = "INSERT INTO utilisateur(siren, nom, telephone, email, mot_de_passe, iban, adresse, ville, code_postal, sel) VALUES (%(siren)s, %(nom)s, %(telephone)s, %(email)s, %(mot_de_passe)s, %(iban)s, %(adresse)s, %(ville)s, %(code_postal)s, %(sel)s);"
+                values = {'siren': self._siren, 'nom': self._company_name, 'telephone': self._phone, 'email': self._email, 'mot_de_passe': self._password,
+                    'iban': self._iban, 'adresse': self._adress, 'ville': self._city, 'code_postal': self._postal_code, 'sel':salt}
                 cursor = conn.cursor()
                 cursor.execute(query, values)
                 conn.commit()
                 conn.close()
+        else:
+            flash('Siren ou email deja utilisé', 'info')
                 
     def hash_password(self):
         salt = secrets.token_hex(16)
-        password = (self.__password+salt).encode('utf-8')
+        password = (self._password+salt).encode('utf-8')
         hashed_password = argon2.PasswordHasher().hash(password)
         return (hashed_password, salt)
         
     def check_password(self):
-        if self.__password == self.__confirm_password:
+        if self._password == self._confirm_password:
             boolean = True
         else:
             boolean = False
@@ -100,7 +106,7 @@ class UserRegister():
         conn = mysql.connect()
         cursor = conn.cursor()
         query = "SELECT email FROM utilisateur WHERE email=%s"
-        values = (self.__email)
+        values = (self._email)
         cursor.execute(query, values)
         email_already_exist = cursor.fetchone()
         conn.close()
@@ -110,35 +116,27 @@ class UserRegister():
         conn = mysql.connect()
         cursor = conn.cursor()
         query = "SELECT siren FROM utilisateur WHERE siren=%s"
-        values = (self.__siren)
+        values = (self._siren)
         cursor.execute(query, values)
         siren_already_exist = cursor.fetchone()
         conn.close()
         return siren_already_exist
 
-class UserInformations():
+class UserInformations(User):
     def __init__(self, siren, company_name, phone, email, password, iban, adress, city, postal_code):
-        self.__siren = siren
-        self.__company_name = company_name
-        self.__phone = phone
-        self.__email = email
-        self.__password = password
-        self.__iban = iban
-        self.__adress = adress
-        self.__city = city
-        self.__postal_code = postal_code
-        
+        super().__init__(email, password, siren, company_name, phone, iban, adress, city, postal_code)
+
     def to_dict(self):
         return {
-            "siren": self.__siren,
-            "company_name": self.__company_name,
-            "phone": self.__phone,
-            "email": self.__email,
-            "password": self.__password,
-            "iban": self.__iban,
-            "adress": self.__adress,
-            "city": self.__city,
-            "postal_code": self.__postal_code
+            "siren": self._siren,
+            "company_name": self._company_name,
+            "phone": self._phone,
+            "email": self._email,
+            "password": self._password,
+            "iban": self._iban,
+            "adress": self._adress,
+            "city": self._city,
+            "postal_code": self._postal_code
         }
         
 class CompanyInformations():
@@ -410,7 +408,7 @@ def generate_invoice():
         }
         conn = mysql.connect()
         cursor = conn.cursor()
-        query = "SELECT contact.nom, entreprise.nom, entreprise.adresse, entreprise.ville, entreprise.code_postal, utilisateur.nom_entreprise, " \
+        query = "SELECT contact.nom, entreprise.nom, entreprise.adresse, entreprise.ville, entreprise.code_postal, utilisateur.nom, " \
                 "utilisateur.adresse, utilisateur.code_postal, utilisateur.ville, utilisateur.siren, utilisateur.telephone, utilisateur.email, utilisateur.iban FROM contact " \
                 "INNER JOIN entreprise ON contact.entreprise_siret = entreprise.siret AND contact.entreprise_utilisateur_siren = entreprise.utilisateur_siren " \
                 "INNER JOIN utilisateur ON entreprise.utilisateur_siren = utilisateur.siren " \
@@ -436,6 +434,7 @@ def add_comment():
         request_dict = {
             'contact_id': request.form.get('contact_id'),
             'description': request.form.get('comment'),
+            'author': session['user_infos']['nom']
         }
         conn = mysql.connect()
         cursor = conn.cursor()
