@@ -17,6 +17,10 @@
                     <input type="hidden" name="contact_id" value="{{ contact[3] }}">
                     <button type="submit">Liste des commentaires</button>
                 </form>
+                <form method="POST" action="{{ url_for('modify_contact') }}">
+                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                    <button type="submit">Modifier le contact</button>
+                </form>
                 <hr>
             </div>
         {%endfor%}
