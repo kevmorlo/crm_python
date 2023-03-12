@@ -39,9 +39,10 @@ Ce projet est un projet d'école consistant à créer un site de CRM en python a
 
 ### Frontend
 
-- Navbar (75%)
-- Page de connexion (50%)
+- Navbar (80%)
+- Page de connexion
 - Page 404 (90%)
+- index (70%)
 
 ## Aperçu
 
@@ -56,7 +57,6 @@ Le projet est adapté pour les plateformes mobiles, tablettes ordinateurs (sauf 
 ### Frontend
 
 - Finir la navbar, la page de connexion, et la page 404
-- Page de création de compte
 - Page de création de nouveaux contacts
 
 ## Installation du projet
