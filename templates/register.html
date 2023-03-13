@@ -7,7 +7,7 @@
             <input type="email" name="email" placeholder="Adresse email" class="form-input" required>
             <input type="password" name="password" placeholder="Mot de passe" class="form-input" required>
             <input type="password" name="confirm_password" placeholder="Confirmation Mot de passe" class="form-input" required>
-            <input type="text" name="siren" placeholder="Siren" class="form-input" required>
+            <input type="text" name="siren" placeholder="N° Siren de l'entreprise" class="form-input" required>
             <input type="text" name="name" placeholder="Nom de l'entreprise" class="form-input" id="form-telephone" required>
             <input type="tel" name="phone" placeholder="Téléphone" class="form-input" required>
             <input type="text" name="iban" placeholder="Iban" class="form-input" id="form-iban" required>
@@ -15,6 +15,7 @@
             <input type="text" name="city" placeholder="Ville" class="form-input" id="form-city" required>
             <input type="text" name="postal_code" placeholder="Code postal" class="form-input" id="form-code-postal" required>
             <button type="submit" class="form-button">Créer un compte</button>
+            <a href="{{ url_for('register') }}" class="a-redirect" title="Se connecter" required>Se connecter</a>
         </form>
     </div>
 {% endblock %}
