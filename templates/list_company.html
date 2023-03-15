@@ -3,20 +3,29 @@
 {% block base %}
 <div class="company_list">
     <div>
-        <a href="{{ url_for('add_new_company') }}">Add new...</a>
+        <a href="{{ url_for('add_new_company') }}">
+            <img class="list_company_icon" alt="Ajouter une entreprise" src="../static/media/img/icone_boite_+.svg" title="Ajouter une entreprise"></img>
+        </a>
     </div>
     {% if list_company %}
         {% for list in list_company %}
             <a href="{{ url_for('company', number=list['siret']) }}">
                 <div class="company_item">
-                    {{ list['company_name'] }}
-                    {{ list['description'] }}
-                    {{ list['url'] }}
+                    <ul>
+                        <li>
+                            {{ list['company_name'] }}
+                        </li>
+                        <li>
+                            {{ list['description'] }}
+                        </li>
+                            {{ list[''] }}
+                        </li>
+                    </ul>
                 </div>  
             </a>
         {%endfor%}
     {% else %}
-            <p>Aucune entreprise enregistrée pour cet utilisateur</p>
+            <p class="list_company_paragraph">Aucune entreprise enregistrée pour cet utilisateur</p>
     {% endif %}
 </div>
 {% endblock %}

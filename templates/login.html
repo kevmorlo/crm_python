@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block base %}
+<div class="form-super-container">
     <div class="form-container">
         <form method="POST" action="{{ url_for('traitement_login') }}" class="form">
             <h1 class="login-h1">Se connecter</h1>
@@ -9,4 +10,5 @@
             <a href="{{ url_for('register') }}" class="a-redirect" title="Créer un compte" required>Créer un compte</a>
         </form>
     </div>
+</div>
 {% endblock %}

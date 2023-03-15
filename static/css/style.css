@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300&display=swap');
 body {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     margin: 0;
     cursor: auto;
     background-color: #F1F8E9;
@@ -11,6 +11,10 @@ h1 {
   font-family: 'Libre Franklin', sans-serif;
   text-align: center;
   margin: 20px;
+}
+
+p{
+  font-family: 'Libre Franklin', sans-serif;
 }
 
 .company_list {
@@ -109,9 +113,17 @@ h1 {
   }
 }
 
+.form-super-container{
+  width: 100%;
+  height: 75%;
+  display: flex;
+  align-items: center;
+}
+
 .form-container{
   display: flex;
   justify-content: center;
+  width: 100vw;
 }
 
 .form{
@@ -124,6 +136,7 @@ h1 {
   padding-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
   width: 70%;
   margin-top: 3%;
 }
@@ -159,8 +172,8 @@ h1 {
 }
 
 .form-button{
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 15%;
+  margin-right: 15%;
   padding-left: 40px;
   padding-right: 40px;
   padding-bottom: 10px;
