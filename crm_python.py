@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from flaskext.mysql import MySQL
 import argon2
 import secrets
@@ -204,22 +204,37 @@ class NewInvoice():
     
     def make_invoice(self, invoice_infos, contact_id):
         num_facture = uuid.uuid4()
-        self.__draw_invoice(num_facture, invoice_infos)
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        query = "INSERT INTO facture(num_facture, chemin, utilisateur_siren, contact_id) VALUES(%(num_facture)s, %(chemin)s, %(utilisateur_siren)s, %(contact_id)s)"
         invoce_dict = {
             'num_facture': num_facture,
             'utilisateur_siren': self.__user_siren,
             'contact_id': contact_id,
-            'chemin': f"invoices/facture_{num_facture}.pdf",
+            'chemin': f"invoices\\facture_{num_facture}.pdf",
         }
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "INSERT INTO facture(num_facture, chemin, utilisateur_siren, contact_id) VALUES(%(num_facture)s, %(chemin)s, %(utilisateur_siren)s, %(contact_id)s)"
         cursor.execute(query, invoce_dict)
         conn.commit()
+        query = "SELECT id FROM facture WHERE num_facture=%(num_facture)s"
+        cursor.execute(query, invoce_dict)
+        self.__invoice_id = cursor.fetchone()[0]  
+        self.__draw_invoice(num_facture, invoice_infos)
         conn.close()
+        # Affichage de la facture
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        query = "SELECT chemin FROM facture WHERE id=%(id)s"
+        value = {
+            'id': self.__invoice_id,
+        }
+        cursor.execute(query, value)
+        path = cursor.fetchone()[0]
+        conn.close()
+        return path
         
     def __draw_invoice(self, num_facture, invoice_infos):
-        pdf_file = canvas.Canvas(f"invoices/facture_{num_facture}.pdf", pagesize=letter)
+        pdf_file = canvas.Canvas(f"invoices\\facture_{num_facture}.pdf", pagesize=letter)
         
         # Titres de la facture
         pdf_file.setFont("Helvetica-Bold", 20)
@@ -257,10 +272,9 @@ class NewInvoice():
         pdf_file.drawString(10, 545, "Facture")
         pdf_file.drawString(180, 545, "Date")
         pdf_file.setFont("Helvetica", 8)
-        pdf_file.drawString(10, 530, "{}".format(num_facture))
+        pdf_file.drawString(10, 530, "{}".format(self.__invoice_id))
         pdf_file.drawString(180, 530, "{}".format(datetime.now().date()))
         pdf_file.save()
-
 
 @app.before_request
 def check_user_logged_in():
@@ -469,9 +483,9 @@ def generate_invoice():
         invoice_infos = cursor.fetchone()
         invoice = NewInvoice(invoice_infos)
         invoice_infos = invoice.to_dict()
-        invoice.make_invoice(invoice_infos, post_dict['contact_id'])
+        path = invoice.make_invoice(invoice_infos, post_dict['contact_id'])
         conn.close()
-        return redirect(url_for('index'))
+        return send_file(path, download_name='facture.pdf', as_attachment=False)
     else:
         return redirect(url_for('index'))
     
@@ -511,6 +525,7 @@ def list_comment():
     values = (request_dict)
     cursor.execute(query, values)
     comments = cursor.fetchall()
+    query = "SELECT "
     conn.close()
     return render_template('list_comment.html', contact_id=request_dict['contact_id'], comments = comments)
 
