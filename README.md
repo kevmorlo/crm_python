@@ -36,7 +36,7 @@ Ce projet est un projet d'école consistant à créer un site de CRM en python a
 
 ## Responsive ?
 
-Le projet est adapté pour les plateformes mobiles, tablettes ordinateurs (sauf 4K)
+Le projet est adapté pour les plateformes mobiles, tablettes et ordinateurs (sauf 4K)
 
 ## Installation du projet
 
