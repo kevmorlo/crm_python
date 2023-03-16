@@ -19,6 +19,7 @@
                         <li>
                             {{ contact[2] }}
                         </li>
+                    </ul>
                     <form method="POST" action="{{ url_for('generate_invoice') }}">
                         <input type="hidden" name="contact_id" value="{{ contact[3] }}">
                         <button type="submit">Générer une facture</button>
