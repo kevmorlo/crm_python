@@ -29,44 +29,28 @@ Ce projet est un projet d'école consistant à créer un site de CRM en python a
 
 ## Contenu
 
-### Backend
-
-- Page de connexion
-- Page de création de compte
-- Connexion à la base de données
-- Création de nouveaux contacts
-- Page 404
-
-### Frontend
-
-- Navbar (80%)
-- Page de connexion
-- Page 404 (90%)
-- index (70%)
-
 ## Aperçu
 
-#TODO
+![Modèle physique de donnée](static/media/img/index.png)
+![Modèle physique de donnée](static/media/img/login.png)
 
 ## Responsive ?
 
 Le projet est adapté pour les plateformes mobiles, tablettes ordinateurs (sauf 4K)
-
-## TODO LIST
-
-### Frontend
-
-- Finir la navbar, la page de connexion, et la page 404
-- Page de création de nouveaux contacts
 
 ## Installation du projet
 
 ### Prérequis
 
 - Python
-- Flask
 
-#TODO
+Il vous faudra d'abord installer les bibliothèques Flask, flaskext-mysql, reportlab, argon2 et datetime avec la commande pip install
+
+Une fois cela fait, il vous faudra créer une base de données, comme par exemple sur PHPMyAdmin, appelée crm de préférence pour simplifier la suite.
+
+Vous devrez ensuite importer le fichier sql présent dans le dossier database dans votre base de données.
+
+Enfin, il vous faudra plus que lancer le serveur avec la commande 'python ./crm_python' et vous connecter avec votre navigateur web !
 
 ## License
 

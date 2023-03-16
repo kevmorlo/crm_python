@@ -220,8 +220,6 @@ class NewInvoice():
         self.__invoice_id = cursor.fetchone()[0]  
         self.__draw_invoice(num_facture, invoice_infos)
         conn.close()
-        # Affichage de la facture
-
         conn = mysql.connect()
         cursor = conn.cursor()
         query = "SELECT chemin FROM facture WHERE id=%(id)s"
@@ -494,8 +492,6 @@ def add_comment():
     '''
     Permet d'ajouter un commentaire sur un contact
     '''
-    #TODO -> au final il faut rajouter l'utilisateur ID et changer l'UI
-    #a clarifier avec erwann
     if request.form.get('comment'):
         request_dict = {
             'contact_id': request.form.get('contact_id'),
