@@ -2,29 +2,37 @@
 
 <div>
     {% block base %}
-        <a href="{{ url_for('add_new_contact', number=siret) }}">
-            <img class="contact_add" src="../static/media/img/icone_contact_+.svg"></img>
-        </a>
-        <div>
-        {% for contact in contacts %}
-            </div>
-                {{ contact[0] }}
-                {{ contact[1] }}
-                {{ contact[2] }}
-                <form method="POST" action="{{ url_for('generate_invoice') }}">
-                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                    <button type="submit">Générer une facture</button>
-                </form>                
-                <form method="POST" action="{{ url_for('list_comment') }}">
-                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                    <button type="submit">Liste des commentaires</button>
-                </form>
-                <form method="POST" action="{{ url_for('modify_contact') }}">
-                    <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                    <button type="submit">Modifier le contact</button>
-                </form>
-                <hr>
-            </div>
+        <h1>Mes Contacts</h1>
+        <div class="basic_list">
+            <a href="{{ url_for('add_new_contact', number=siret) }}">
+                <img class="contact_add" alt="Ajouter un contact" src="../static/media/img/icone_contact_+.svg" title="Ajouter un contact"></img>
+            </a>
+            {% for contact in contacts %}
+                <div class="basic_item">
+                    <ul>
+                        <li>
+                            {{ contact[0] }}
+                        </li>
+                        <li>
+                            {{ contact[1] }}
+                        </li>
+                        <li>
+                            {{ contact[2] }}
+                        </li>
+                    <form method="POST" action="{{ url_for('generate_invoice') }}">
+                        <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                        <button type="submit">Générer une facture</button>
+                    </form>                
+                    <form method="POST" action="{{ url_for('list_comment') }}">
+                        <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                        <button type="submit">Liste des commentaires</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('modify_contact') }}">
+                        <input type="hidden" name="contact_id" value="{{ contact[3] }}">
+                        <button type="submit">Modifier le contact</button>
+                    </form>
+                    <hr>
+                </div>
         {%endfor%}
         </div>
     {% endblock %}

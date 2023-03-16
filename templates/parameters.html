@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
 {% block base %}
-
-    <form method="POST" action="{{ url_for('parameters') }}">
-        <input type="email" name="email" placeholder="Adresse email" value="{{ user_infos['email'] }}" required>
-        <input type="text" name="name" placeholder="Nom de l'entreprise" value="{{ user_infos['name'] }}" required>
-        <input type="tel" name="phone" placeholder="Téléphone" value="{{ user_infos['phone'] }}" required>
-        <input type="text" name="iban" placeholder="Iban" value="{{ user_infos['iban'] }}" required>
-        <input type="text" name="adress" placeholder="adresse" value="{{ user_infos['adress'] }}" required>
-        <input type="text" name="city" placeholder="Ville" value="{{ user_infos['city'] }}" required>
-        <input type="text" name="postal_code" placeholder="Code postal" value="{{ user_infos['postal_code'] }}" required>
-        <button type="submit">Submit</button>
-    </form>
+<div class="form-super-container">
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('parameters') }}" class="form">
+            <h1 class="login-h1">Mettre à jour les infos</h1>
+            <input type="email" name="email" placeholder="Adresse email" value="{{ user_infos['email'] }}" class="form-input" required>
+            <input type="text" name="name" placeholder="Nom de l'entreprise" value="{{ user_infos['name'] }}" class="form-input" required>
+            <input type="tel" name="phone" placeholder="Téléphone" value="{{ user_infos['phone'] }}" class="form-input" required>
+            <input type="text" name="iban" placeholder="Iban" value="{{ user_infos['iban'] }}" class="form-input" required>
+            <input type="text" name="adress" placeholder="adresse" value="{{ user_infos['adress'] }}" class="form-input" required>
+            <input type="text" name="city" placeholder="Ville" value="{{ user_infos['city'] }}" class="form-input" required>
+            <input type="text" name="postal_code" placeholder="Code postal" value="{{ user_infos['postal_code'] }}" class="form-input" required>
+            <button type="submit" class="form-button">Modifier</button>
+        </form>
 
 {% endblock %}

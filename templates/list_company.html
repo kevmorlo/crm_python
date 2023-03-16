@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block base %}
+<h1>Mes Entreprises</h1>
 <div class="basic_list">
     <div class="list_new_company">
         <a href="{{ url_for('add_new_company') }}">
-            <img class="list_company_icon" alt="Ajouter une entreprise" src="../static/media/img/icone_boite_+.svg" title="Ajouter une entreprise"></img>
+            <img class="list_icon" alt="Ajouter une entreprise" src="../static/media/img/icone_boite_+.svg" title="Ajouter une entreprise"></img>
         </a>
     </div>
     {% if list_company %}
