@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
 {% block base %}
-
-    <form method="POST" action="{{ url_for('add_comment') }}">
-        <input type="hidden" name="contact_id" value="{{ contact_id }}">
-        <button type="submit">Ajouter un commentaire</button>
-    </form>
+<h1>Mes Commentaires</h1>
+    <div class="basic_list">
+        <div class="list_new_company">
+            <form method="POST" action="{{ url_for('add_comment') }}">
+                <input type="hidden" name="contact_id" value="{{ contact_id }}">
+                <button type="submit" class="comment_add">
+                    <img class="list_icon" alt="Ajouter un commentaire" src="../static/media/img/icone_comm.svg" title="Ajouter un commentaire"></img>
+                </button>
+            </form>
     {% for comment in comments %}
         <p>
             {{ comment[1] }} : {{ comment[0] }}

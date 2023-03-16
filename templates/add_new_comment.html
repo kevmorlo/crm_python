@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block base %}
-
-<form method="POST" action="{{ url_for('add_comment') }}">
-    <input type="hidden" name="contact_id" value="{{ contact_id }}" required>
-    <textarea type="text" name="comment" placeholder="Placez votre commentaire ici" required></textarea>
-    <button type="submit">Envoyer</button>
-</form>
+<div class="form-super-container">
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('add_comment') }}" class="form">
+            <h1 class="login-h1">Commenter</h1>
+            <input type="hidden" name="contact_id" value="{{ contact_id }}" required>
+            <textarea type="text" name="comment" placeholder="Placez votre commentaire ici" class="form-input comment-textarea" required></textarea>
+            <button type="submit" class="form-button">Envoyer</button>
+        </form>
 
 {% endblock %}

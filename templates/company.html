@@ -20,19 +20,20 @@
                             {{ contact[2] }}
                         </li>
                     </ul>
+                    <div class="company_buttons">
                     <form method="POST" action="{{ url_for('generate_invoice') }}">
                         <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                        <button type="submit">Générer une facture</button>
-                    </form>                
+                        <button type="submit" class="company_button">Générer une facture</button>
+                    </form>         
                     <form method="POST" action="{{ url_for('list_comment') }}">
                         <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                        <button type="submit">Liste des commentaires</button>
+                        <button type="submit" class="company_button">Liste des commentaires</button>
                     </form>
                     <form method="POST" action="{{ url_for('modify_contact') }}">
                         <input type="hidden" name="contact_id" value="{{ contact[3] }}">
-                        <button type="submit">Modifier le contact</button>
+                        <button type="submit" class="company_button">Modifier le contact</button>
                     </form>
-                    <hr>
+                </div>
                 </div>
         {%endfor%}
         </div>

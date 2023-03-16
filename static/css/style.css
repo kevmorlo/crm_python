@@ -282,3 +282,36 @@ ul {
     margin-bottom: 50px;
   }
 }
+
+.company_button{
+  font-size: smaller;
+  margin-left: 15%;
+  margin-right: 15%;
+  background: #C5E1A5;
+  cursor: pointer;
+  border: None;
+  border-radius: 25px;
+  box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.07);
+}
+
+@media (max-width: 768px) {
+  .company_buttons{
+    flex-direction: column;
+  }
+}
+
+.company_buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comment_add{
+  background-color: rgba(0, 0, 0, 0);
+  border: None;
+  cursor: pointer;
+}
+
+.comment-textarea{
+  resize: None;
+}
