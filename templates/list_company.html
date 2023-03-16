@@ -9,8 +9,8 @@
     </div>
     {% if list_company %}
         {% for list in list_company %}
-            <a href="{{ url_for('company', number=list['siret']) }}">
-                <div class="company_item">
+            <div class="company_item">
+                <a href="{{ url_for('company', number=list['siret']) }}">
                     <ul>
                         <li>
                             {{ list['company_name'] }}
@@ -18,11 +18,28 @@
                         <li>
                             {{ list['description'] }}
                         </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            Factures
+                        </li>
+                        <li>
                             {{ list[''] }}
                         </li>
                     </ul>
-                </div>  
-            </a>
+                    <ul>
+                        <li>
+                            Contacts
+                        </li>
+                        <li>
+                            {{ list[''] }}
+                        </li>
+                    </ul>
+                </a>
+                <a href="#"> <!-- Lien pour supprimer une entreprise -->
+                    <img class="list_company_icon" alt="Supprimer" src="../static/media/img/icone_suppr.svg" title="Supprimer"></img>
+                </a>
+            </div>
         {%endfor%}
     {% else %}
             <p class="list_company_paragraph">Aucune entreprise enregistrée pour cet utilisateur</p>
