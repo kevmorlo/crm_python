@@ -140,18 +140,22 @@ class UserInformations(User):
         }
         
 class CompanyInformations():
-    def __init__(self, company_name, siret, description: str = '', url:str = ''):
+    def __init__(self, company_name, siret, description: str = '', url:str = '', contact:int = 0, invoice: str=0):
         self.__company_name = company_name
         self.__description = description
         self.__url = url
         self.__siret = siret
+        self.__contact = contact
+        self.__invoice = invoice
     
     def to_dict(self):
         return {
             "company_name": self.__company_name,
             "description": self.__description,
             "url": self.__url,
-            "siret": self.__siret
+            "siret": self.__siret,
+            "nb_invoice": self.__invoice,
+            "nb_contact": self.__contact,
         }
         
 class ContactInformations():
@@ -359,7 +363,11 @@ def list_company():
     '''
     conn = mysql.connect()
     cursor = conn.cursor()
-    query = "SELECT nom, siret, description, url FROM entreprise WHERE utilisateur_siren=%s"
+    query = "SELECT entreprise.nom, entreprise.siret, entreprise.description, entreprise.url, " \
+        "(SELECT COUNT(*) FROM contact WHERE contact.entreprise_siret = entreprise.siret AND contact.entreprise_utilisateur_siren = entreprise.utilisateur_siren) AS nb_contacts, " \
+        "(SELECT COUNT(*) FROM facture JOIN contact ON facture.contact_id = contact.id WHERE contact.entreprise_siret = entreprise.siret AND contact.entreprise_utilisateur_siren = entreprise.utilisateur_siren) AS nb_factures " \
+        "FROM entreprise " \
+        "WHERE entreprise.utilisateur_siren=%s"
     values = (session['user_infos']['siren'])
     cursor.execute(query, values)
     list_company = cursor.fetchall()
