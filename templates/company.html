@@ -2,7 +2,9 @@
 
 <div>
     {% block base %}
-        <a href="{{ url_for('add_new_contact', number=siret) }}">Ajouter un contact</a>
+        <a href="{{ url_for('add_new_contact', number=siret) }}">
+            <img class="contact_add" src="../static/media/img/icone_contact_+.svg"></img>
+        </a>
         <div>
         {% for contact in contacts %}
             </div>
