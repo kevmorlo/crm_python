@@ -1,44 +1,48 @@
 {% extends "base.html" %}
 
 {% block base %}
-<div class="company_list">
-    <div>
+<div class="basic_list">
+    <div class="list_new_company">
         <a href="{{ url_for('add_new_company') }}">
             <img class="list_company_icon" alt="Ajouter une entreprise" src="../static/media/img/icone_boite_+.svg" title="Ajouter une entreprise"></img>
         </a>
     </div>
     {% if list_company %}
         {% for list in list_company %}
-            <div class="company_item">
-                <a href="{{ url_for('company', number=list['siret']) }}">
+            <div class="basic_item">
+                <a href="{{ url_for('company', number=list['siret']) }}" class="list_a">
                     <ul>
                         <li>
-                            {{ list['company_name'] }}
+                            <h2 class="list_h2">
+                                {{ list['company_name'] }}
+                            <h2>
                         </li>
                         <li>
                             {{ list['description'] }}
                         </li>
                     </ul>
                     <ul>
-                        <li>
-                            Factures
+                        <li class="basic_subtitle">
+                            Factures :
                         </li>
                         <li>
                             {{ list[''] }}
                         </li>
                     </ul>
                     <ul>
-                        <li>
-                            Contacts
+                        <li class="basic_subtitle">
+                            Contacts :
                         </li>
                         <li>
                             {{ list[''] }}
                         </li>
                     </ul>
                 </a>
-                <a href="#"> <!-- Lien pour supprimer une entreprise -->
-                    <img class="list_company_icon" alt="Supprimer" src="../static/media/img/icone_suppr.svg" title="Supprimer"></img>
-                </a>
+                <div class="list_company_icon" alt="Supprimer" title="Supprimer">
+                    <a href="#"> <!-- Lien pour supprimer une entreprise -->
+                        <img src="../static/media/img/icone_suppr.svg"></img>
+                    </a>
+                </div>
             </div>
         {%endfor%}
     {% else %}
