@@ -9,13 +9,11 @@ Ce projet est un projet d'école consistant à créer un site de CRM en python a
 - Kevin Lebeau : <https://github.com/kevmorlo>
 - Emilien Cuny : <https://github.com/ArToXxFR>
 
-## Langages utilisés ?
+## Langage utilisé ?
 
 ----------------------------
 
 - Python
-- HTML
-- CSS
 
     Modèle physique de données :
 
